@@ -108,7 +108,7 @@ analytics:
 author:
   name             : "Seokjin Hong"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "Back-End developer, Java, Spring framework, Spring boot"
+  bio              : "Back-End developer, Java, Spring framework"
   location         : "Jeju-do, Korea"
   email            : companyhongsj@gmail.com
   links:
