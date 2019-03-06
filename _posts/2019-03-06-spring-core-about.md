@@ -7,7 +7,9 @@ categories: java
 ## 스프링 코어 대하여
   - 스프링 코어
     - 스프링 IoC 컨테이너가 빈들을 관리(생성에서 파괴까지)
-    - 스프링 IoC 컨테이너는 DI를 사용하여 애플리케이션 컴포넌트(@Component, @Repository, @Service, @Controller)를 관리
+    - 스프링 IoC 컨테이너는 DI를 사용하여 애플리케이션 컴포넌트를 관리
+    - 애플리케이션 컴포넌트란 @Configuration, @Bean, @Component, @Repository, @Service, @Controller 등을 붙힌 자바 객체를 말함
+    - 스프링 IoC 컨테이너는 애플리케이션 컴포넌트들을 스캐닝하여 애플리케이션의 일부인것 처럼 빈을 구성함
   - 빈(Bean)
     - 스프링 IoC 컨테이너에 의해 관리 되는 객체
     - 스프링 문서에는 빈과 POJO 인스턴스를 같은 의미로 혼용함
