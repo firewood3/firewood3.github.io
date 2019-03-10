@@ -60,7 +60,7 @@ categories: java spring
 - BeanPostProcessor 인터페이스의 postProcessAfterInitializtion 메소드
 
 
-### 여러 POJO 클래스 중 Bean으로 만들 POJO 클래스 선택하기
+### 환경변수를 추가하여 여러 POJO 클래스 중 Bean으로 만들 POJO 클래스 선택하기
 - @Profiles("profile_name")
 - ApplicationContext의 setActiveProfiles("string... profiles") 메소드
 
