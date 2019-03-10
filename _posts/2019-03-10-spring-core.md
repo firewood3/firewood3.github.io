@@ -45,3 +45,19 @@ categories: java spring
 - ResourceBundleMessageSource 구현체
 - messages_[language]_[country].properties
 - MessageSourcet의 getMessage 메소드
+
+
+### Bean의 초기화와 폐기
+- @Bean(initMethod = "method_name", destroyMethod = "method_name")
+- @PostConstruct와 @PreDestroy
+- @Lazy
+- @DependsOn({"depended_beans_name"})
+
+
+### 모든 Bean의 생성 시점 전/후를 감지하기
+- BeanPostProcessor 인터페이스를 Bean으로 구현
+- BeanPostProcessor 인터페이스의 postProcessBeforeInitializtion 메소드
+- BeanPostProcessor 인터페이스의 postProcessAfterInitializtion 메소드
+
+
+
