@@ -60,4 +60,23 @@ categories: java spring
 - BeanPostProcessor 인터페이스의 postProcessAfterInitializtion 메소드
 
 
+### 여러 POJO 클래스 중 Bean으로 만들 POJO 클래스 선택하기
+- @Profiles("profile_name")
+- ApplicationContext의 setActiveProfiles("string... profiles") 메소드
+
+
+### POJO 클래스에서 스프링 IoC 컨테이너의 리소스 가져오기
+- 목적에 맞는 Aware 인터페이스를 구현하여 사용
+- Aware 인터페이스의 종류
+
+
+| Aware 인터페이스 | 대상 리소스 |
+| ----------- | ---------------- |
+| BeanNameAware | 인스턴스의 빈 이름 |
+| BeanFactoryAware | 현재 빈팩토리 | 
+| ApplicationContextAware | 현재 어플리케이션 컨텍스트 |
+| MessageSourceAware | 메시지 소스 |
+| ApplicationEventPublisherAware | 이벤트 퍼블리셔 |
+| ReourceLoaderAware | 리소스 로더  |
+| EnvironmentAware | 어플리케이션 컨텍스트의 Environment 인스턴스   |
 
