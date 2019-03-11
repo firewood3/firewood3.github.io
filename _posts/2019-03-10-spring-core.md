@@ -80,3 +80,18 @@ categories: java spring
 | ReourceLoaderAware | 리소스 로더  |
 | EnvironmentAware | 어플리케이션 컨텍스트의 Environment 인스턴스   |
 
+
+### TaskExecutor로 동시성 프로그래밍 하기
+- TaskExecutor 구현체를 빈으로 등록하고 POJO에서 TaskExecutor 구현체를 주입받아 사용가능
+- TaskExecutor 구현체의 종류
+    - syncTaskExecutor
+    - SimpleAsyncTaskExecutor
+    - ThreadPoolTaskExecutor
+
+
+***
+참고도서  
+제목: 스프링5레시피(4판)  
+지은이: 마틴데니엄, 다니엘 루비오, 조시 롱  
+옮긴이: 이일웅  
+펴낸곳: 한빛미디어  
