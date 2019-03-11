@@ -10,7 +10,7 @@ categories: java spring
 - Setter에 @Autoried 붙히기
 
 
-### 타입이 같은 빈을 자동 연결하기 위한 어노테이션
+### 타입이 같은 Bean을 자동 연결하기 위한 어노테이션
 - @Primary
 - @Qulifier("name")
 
@@ -20,7 +20,7 @@ categories: java spring
 - @Inject
 
 
-### 빈의 범위를 제어하는 @Scope("scope_name")
+### Bean의 범위를 제어하는 @Scope("scope_name")
 - singleton
 - prototype
 - request
@@ -28,23 +28,23 @@ categories: java spring
 - globalSession
 
 
-### 빈 객체에서 외부 리소스를 사용하기 위한 어노테이션
+### POJO에서 외부 리소스를 사용하기 위한 어노테이션
 - @PropertySource("classpath:file_name")
 - @Value("${key:default_value}")
 - @Value("classpath:file_name")
 
 
-### 외부 리소스를 가져오기 spring.core.io의 위한 객체
+### 외부 리소스를 가져오기 위한 spring.core.io의 클래스
 - ClasspathResource
 - FileSystemResource
 - UrlResource
 
 
-### MessageSource를 빈으로 등록해 다국어 메시지 불러오기
+### 다국어 메시지를 불러오기 위해 MessageSource를 빈으로 등록하기
 - MessageSource 인터페이스
 - ResourceBundleMessageSource 구현체
 - messages_[language]_[country].properties
-- MessageSourcet의 getMessage 메소드
+- MessageSource의 getMessage(key, locale) 메소드
 
 
 ### Bean의 초기화와 폐기
@@ -60,7 +60,7 @@ categories: java spring
 - BeanPostProcessor 인터페이스의 postProcessAfterInitializtion 메소드
 
 
-### 환경변수를 추가하여 여러 POJO 클래스 중 Bean으로 만들 POJO 클래스 선택하기
+### 여러 POJO 클래스 중 Bean으로 만들 POJO 클래스 선택하기
 - @Profiles("profile_name")
 - ApplicationContext의 setActiveProfiles("string... profiles") 메소드
 
@@ -78,7 +78,7 @@ categories: java spring
 | MessageSourceAware | 메시지 소스 |
 | ApplicationEventPublisherAware | 이벤트 퍼블리셔 |
 | ReourceLoaderAware | 리소스 로더  |
-| EnvironmentAware | 어플리케이션 컨텍스트의 Environment 인스턴스   |
+| EnvironmentAware | 어플리케이션 컨텍스트의 Environment 인스턴스 |
 
 
 ### TaskExecutor로 동시성 프로그래밍 하기
