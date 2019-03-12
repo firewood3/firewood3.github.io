@@ -9,6 +9,19 @@ categories: java spring
 - 생성자에 @Autoriewd 붙히기
 - Setter에 @Autoried 붙히기
 
+***@Autowired를 사용한 자동주입***
+```java
+@Component
+public class Apojo {
+    @Autowired
+    private Bpojo bpojo;
+
+    public String getBpojoValue() {
+        return bpojo.getB();
+    }
+}
+```
+
 
 ## 타입이 같은 Bean을 자동 연결하기 위한 어노테이션
 - @Primary
