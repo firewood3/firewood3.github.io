@@ -15,6 +15,43 @@ categories: java spring
 - @Qulifier("name")
 
 
+***같은 인터페이스를 구현한 LongStringPOJO와 ShortStringPOJO***
+```java
+public interface StringInterface {
+    String getValue();
+}
+public class ShortStringString implements StringInterface {
+
+    public String getValue() {
+        return "short";
+    }
+}
+public class LongStringString implements StringInterface {
+    public String getValue() {
+        return "long";
+    }
+}
+```
+
+***빈 설정 시 우선순위 지정***
+```java
+@Configuration
+public class BeanConfiguration {
+
+    @Bean
+    @Primary
+    public StringInterface shortStringPojo() {
+        return new ShortStringString();
+    }
+
+    @Bean
+    public StringInterface longStringPojo() {
+        return new LongStringString();
+    }
+}
+```
+
+
 ## 자동 주입을 위한 자바 표준 어노테이션
 - @Resource
 - @Inject
