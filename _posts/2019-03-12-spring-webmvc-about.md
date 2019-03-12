@@ -11,6 +11,8 @@ categories: java spring
 
 
 디스패쳐 서블렛(DispatcherServlet)은 스프링 웹 MVC의 핵심적인 컴포넌트이다. 디스패쳐 서블렛은 HTTP 요청과 응답을 처리하고 모델, 뷰, 컨트롤러를 제어 한다.
+
+
 ![screensh](https://www.tutorialspoint.com/spring/images/spring_dispatcherservlet.png)
 
 1. 디스패쳐 서블릿은 HTTP 요청을 받으면 HandlerMapping을 찾아 적절한 Controller가 호출될 수 있도록 한다.
