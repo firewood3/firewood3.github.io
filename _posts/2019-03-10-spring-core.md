@@ -68,11 +68,6 @@ public class BeanPOJO {
 }
 ```
 
-## 외부 리소스를 가져오기 위한 spring.core.io의 클래스
-- ClasspathResource
-- FileSystemResource
-- UrlResource
-
 
 ## 다국어 메시지를 불러오기 위해 MessageSource를 빈으로 등록하기
 - MessageSource 인터페이스
