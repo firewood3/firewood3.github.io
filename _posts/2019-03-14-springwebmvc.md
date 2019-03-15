@@ -38,7 +38,7 @@ public class MemberController {
 ## 인터셉터로 요청 가로채기
 - HTTP 요청을 가로채 전/후처리 가능
 - HandlerInterceptor 인터페이스를 빈으로 등록
-- 등록된 인터셉터 빈을 InterceptorRegistry에 등록
+- 등록된 인터셉터 빈을 WebMvc의 InterceptorRegistry에 등록
 
 ***HandlerInterceptor POJO 구현***
 ```java
