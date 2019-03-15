@@ -338,8 +338,8 @@ public class MemberController {
 }
 ```
 
-## @Valid 어노테이션을 사용하여 RequestBody 검증하기
-- @Valid : HandlerMapping 메소드에서 RequestBody를 검증하기위한 어노테이션
+## @Valid 어노테이션을 사용하여 검증하기
+- HandlerMapping 메소드에서 @Valid 어노테이션을 사용하여 RequestBody를 검증 할 수 있음
 - BindingResult : 검증 결과를 HandlerMapping 메소드의 매개변수로 받음
 - 유효성 검증 어노테이션
     - @Min(value="", message="")
