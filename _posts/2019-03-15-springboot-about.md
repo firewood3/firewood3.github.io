@@ -11,6 +11,7 @@ categories: java spring
 - 웹 서비스를 보다 쉽게 만들 수 있음
 - 웹 서버를 내장하고 있음
 - Runnable JAR로 실행됨
+- 스프링 부트 프로젝트 만들기 : [start.spring.io/](https://start.spring.io/)
 
 ***스프링 부트의 폴더 규약***
 
