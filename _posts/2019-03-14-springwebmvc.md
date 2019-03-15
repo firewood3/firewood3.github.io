@@ -86,10 +86,13 @@ public class InterceptorHandler implements WebMvcConfigurer {
     - AcceptHeaderLocaleResolver : 브라우저의 Locale 값을 읽어옴, 기본 LocalResolver, 로케일 변경 불가
     - SessionLocaleResolver : Session에 설정되어있는 Locale값을 읽어옴, 최초 세션 생성시 디폴트 로케일 지정가능
     - CookieLocaleResolver : 브라우저 쿠키의 Locale 값을 읽어옴, 최초 쿠키에 디폴트 로케일 지정가능
-- LocaleChangeInterceptor
+    - 유저 로케일은 HandlerMapping에서 매개변수로 받을 수 있음
+- 특수 인터셉터로 유저 로케일 변경하기
+    - LocaleChangeInterceptor 인터페이스를 빈으로 등록
     - URL 파라미터로 로케일을 변경할 수 있는 특수한 인터셉터
+    - AcceptHeaderLocaleResolver는 사용불가, SessionLocaleResolver와 CookieLocaleResolver만 사용가능
     - http://localhost:8080/member/get/list?language="locale(de, en_US)"
-    - HandlerMapping에서 매개변수로 Locale(de, en_US)을 받을 수 있음
+    
 
 ***상황에 맞는 로컬 리졸버 등록***
 ```java
