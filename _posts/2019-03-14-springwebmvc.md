@@ -275,6 +275,7 @@ public class ViewResolverConfiguration {
 
 
 ## 뷰 예외 페이지 매핑하기
+- HandlerMapping 메소드에서 특정 런타임 예외가 발생할때 미리 지정된 뷰를 내려주는 기술
 - HandlerExceptionResolver 등록
     - properties로 예외 클래스와 예외 패이지 매핑
     - HandlerMapping 메소드에서 해당 예외 발생시 연결된 예외 페이지를 내려줌
