@@ -95,6 +95,11 @@ public String each(Model model) {
 ```
 
 ***
+
+
+[SimpleCode: GitHub](https://github.com/firewood3/boot-jpub/tree/master/sprinboot-simple-thymeleaf)
+
+
 참고도서  
 제목: 스프링 부트로 배우는 자바 웹 개발  
 지은이: 윤석진  
