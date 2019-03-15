@@ -13,6 +13,7 @@ categories: java spring
 - Runnable JAR로 실행됨
 
 ***스프링 부트의 폴더 규약***
+
 | 웹 자원 | 경로 |
 | ----------- | ---------------- |
 | 정적 파일 | src/main/resources/static |
