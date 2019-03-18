@@ -382,6 +382,8 @@ public class SwaggerConfig {
 ![swagger 적용](../images/swagger_적용.png)
 
 ***
+[샘플 코드](https://github.com/firewood3/spring/tree/master/spring-rest-01)
+
 참고자료  
 [위키백과 REST](https://ko.wikipedia.org/wiki/REST)   
 [Srping Hateoas](https://spring.io/understanding/HATEOAS)  
