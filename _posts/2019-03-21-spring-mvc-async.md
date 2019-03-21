@@ -4,10 +4,10 @@ date: 2019-03-21 14:35:00 -0400
 categories: java spring
 ---
 
-- 최초에는 서블릿 API 컨테이너가 요청당 스레드 하나만 사용(컨테이너가 요청을 받아 처리를 끝내고 클라이언트에 응답을 돌려주기 전까지 스레드는 항상 블로킹 됐었음)  
-- 서블렛 3부터, HTTP 요청을 비동기로 처리할 수 있었음  
-- 스프링 5부터는 리엑티브 웹 애플리케이션 개발이 가능  
-- 리엑티브 프로그래밍은 한마디로 넌블로킹 함수형 프로그래밍을 실천하는 방법  
+- 최초에는 서블릿 API 컨테이너가 요청당 스레드 하나만 사용(컨테이너가 요청을 받아 처리를 끝내고 클라이언트에 응답을 돌려주기 전까지 스레드는 항상 블로킹 됐었음)
+- 서블렛 3부터, HTTP 요청을 비동기로 처리할 수 있었음
+- 스프링 5부터는 리엑티브 웹 애플리케이션 개발이 가능
+- 리엑티브 프로그래밍은 한마디로 넌블로킹 함수형 프로그래밍을 실천하는 방법
 
 ## 컨트롤러에서 HTTP 요청을 비동기 처리하기
 - HTTP 요청을 비동기 처리하기 위해서 TaskExecutor를 사용한다.
@@ -184,6 +184,7 @@ public class PersonController {
 ```
 
 ## AsyncHandlerInterceptor 인터셉터 활용하기
+- HandlerInterceptor 대신 AsyncHandlerInterceptor를 사용하면 HandingMapping단계에서 비동기 실행의 시작을 가로챌수 있음
 - preHandle : HandlerMapping 이전, HandelrInterceptor에도 존재
 - postHandle : HandlerMapping 이후, 모델 조작 가능, HandelrInterceptor에도 존재
 - afterCompletion : 뷰 랜더링 마친 이후, HandelrInterceptor에도 존재
@@ -196,6 +197,112 @@ public class InterceptConfig implements AsyncHandlerInterceptor {
         System.out.println("afterConcurrentHandlingStarted" + request.getRequestURI());
     }
 }
+```
+
+## 웹 소켓을 사용하여 양방향 통신하기
+- HTML5에서 웹 소켓을 지원하여 사용 가능
+- TCP(Transmission Control Protocol) 프로토콜로 양방향 통신하기
+    - @EnableWebSocket
+    - SocketHandler를 만들어 수신과 송신 처리
+- STOMP(Simple Text-Oriented Protocol) 프로토콜로 양방향 통신하기
+    - @EnableWebSocketMessageBroker
+    - @Controller에서 수신과 송친 처리
+    - 전송과 수신 URL의 접두어를 붙힐 수 있는 브로커를 사용할 수 있음
+
+***TCP 프로토콜로 양방향 통신***
+
+*server side*
+```java
+@Configuration
+@EnableWebSocket
+public class WebSocketConfiguration implements WebSocketConfigurer {
+
+    @Bean
+    public EchoHandler echoHandler() {
+        return new EchoHandler();
+    }
+
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
+        webSocketHandlerRegistry.addHandler(echoHandler(), "/echo");
+    }
+}
+
+public class EchoHandler extends TextWebSocketHandler {
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        session.sendMessage(new TextMessage("CONNECTION ESTABLISHED"));
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        session.sendMessage(new TextMessage("CONNECTION CLOSED"));
+    }
+
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        String msg = message.getPayload();
+        session.sendMessage(new TextMessage("RECEIVED: " + msg));
+    }
+}
+```
+
+*client side*
+```js
+var url = "ws://localhost:8080/echo";
+ws = new WebSocket(url);
+
+ws.send(message);
+
+ws.onmessage = function (event) {
+    log(event.data);
+};
+
+ws.close();
+```
+
+***STOMP 프로토콜로 양방향 통신***
+
+*server side*
+```java
+@Configuration
+@EnableWebSocketMessageBroker
+public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfigurer {
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.enableSimpleBroker("/topic");//브로커가 전송할때 프리픽스
+        registry.setApplicationDestinationPrefixes("/app");//브로커가 받을 때 프리픽스
+    }
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/echo-endpoint");
+    }
+}
+
+@Controller
+public class EchoHandler {
+    @MessageMapping("/echo")
+    @SendTo("/topic/echo")
+    public String echo(String msg) {
+        return "RECEIVED: " + msg;
+    }
+}
+```
+
+*client side*
+```js
+var url = "ws://localhost:8080/echo-endpoint";
+ws = webstomp.client(url);
+ws.connect({}, function(frame) {
+    ws.subscribe('/topic/echo', function(message){
+        log(message.body);
+    })
+});
+
+ws.send("/app/echo", message);
+
+ws.disconnect();
 ```
 
 
