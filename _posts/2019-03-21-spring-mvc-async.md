@@ -4,10 +4,24 @@ date: 2019-03-21 14:35:00 -0400
 categories: java spring
 ---
 
+- [개요](#s)  
+- [HTTP 요청 비동기 처리](#p1)  
+- [청크 데이터 비동기 처리](#p2)  
+- [비동기를 감지하는 인터셉터 사용](#p3)  
+- [웹 소켓](#p4)  
+- [리액티브 웹](#p5)  
+- [리액티브 REST](#p6)  
+- [Handler 기반의 리액티브 REST](#p7)  
+
+<a id="s"></a>
+
+## 스프링 MVC 비동기에 대하여
 - 최초에는 서블릿 API 컨테이너가 요청당 스레드 하나만 사용(컨테이너가 요청을 받아 처리를 끝내고 클라이언트에 응답을 돌려주기 전까지 스레드는 항상 블로킹 됐었음)
 - 서블렛 3부터, HTTP 요청을 비동기로 처리할 수 있었음
 - 스프링 5부터는 리엑티브 웹 애플리케이션 개발이 가능
 - 리엑티브 프로그래밍은 한마디로 넌블로킹 함수형 프로그래밍을 실천하는 방법
+
+<a id="p1"></a>
 
 ## 컨트롤러에서 HTTP 요청을 비동기 처리하기
 - HTTP 요청을 비동기 처리하기 위해서 TaskExecutor를 사용한다.
@@ -127,6 +141,8 @@ public class AsyncController {
 }
 ```
 
+<a id="p2"></a>
+
 ## HttpMessageConverter 인프라를 사용하여 데이터를 청크로 나누어 전송하기
 - (@ResponseBody와 비슷)
 - ResponseBodyEmitter 사용
@@ -183,6 +199,8 @@ public class PersonController {
 }
 ```
 
+<a id="p3"></a>
+
 ## AsyncHandlerInterceptor 인터셉터 활용하기
 - HandlerInterceptor 대신 AsyncHandlerInterceptor를 사용하면 HandingMapping단계에서 비동기 실행의 시작을 가로챌수 있음
 - preHandle : HandlerMapping 이전, HandelrInterceptor에도 존재
@@ -198,6 +216,8 @@ public class InterceptConfig implements AsyncHandlerInterceptor {
     }
 }
 ```
+
+<a id="p4"></a>
 
 ## 웹 소켓을 사용하여 양방향 통신하기
 - HTML5에서 웹 소켓을 지원하여 사용 가능
@@ -305,6 +325,7 @@ ws.send("/app/echo", message);
 ws.disconnect();
 ```
 
+<a id="p5"></a>
 
 ## 스프링 웹 플럭스로 리액티브 애플리케이션 개발하기
 - 리액티브 프로그래밍은 데이터 흐름과 변화 전파에 중점을 둔 프로그래밍 패러다임
@@ -445,6 +466,8 @@ public class StudentService {
 }
 ```
 
+<a id="p6"></a>
+
 ## 리액티브 REST 서비스를 만들고 비동기 웹 클라이언트로 REST 정보 가져오기
 @ResponseBody 또는 @RestController를 사용하고 반환형이 Mono나 Flux인 핸들러 매퍼를 사용하면 리액티브 REST 서비스를 사용할 수 있다.  
 스프링에서는 REST API를 비동기적으로 소비하기위해 WebClient라는 인터페이스를 제공한다. 이전에 사용되던 AsyncRestTemplate은 권장되지 않는다.  
@@ -473,6 +496,8 @@ public void restTest() throws IOException {
     System.in.read();
 }
 ```
+
+<a id="p7"></a>
 
 ## 핸들러 기반의 REST API 만들기
 스프링에서 리액티브 REST를 만들때, 컨트롤러 기반이 아닌 핸들러 기반으로도 REST 서비스를 만들 수 있다.  
@@ -508,12 +533,13 @@ RouterFunction<ServerResponse> getOne(NoticeHandler noticeHandler) {
 ```
 
 
+***  
+[GitHub: Srping MVC Async](https://github.com/firewood3/spring/tree/master/spring-mvc-async)
+
 
 참고자료  
 [WebApplicationInitializer로 Spring MVC 설정하기](http://blog.naver.com/PostView.nhn?blogId=take0415&logNo=221017059396&redirect=Dlog&widgetTypeCall=true)
-
 [Understanding Reactive types](https://spring.io/blog/2016/04/19/understanding-reactive-types)
-
 [리엑티브 선언문](https://www.reactivemanifesto.org/ko)
 
 
