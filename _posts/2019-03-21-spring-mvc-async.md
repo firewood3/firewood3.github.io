@@ -133,7 +133,7 @@ public class AsyncController {
 - SseEmitter 사용
     - event-stream 기반
 
-***ResponseBodyEmitter와 SseEmitter 사용 ***
+***ResponseBodyEmitter와 SseEmitter 사용***
 
 ```java
 @Controller
@@ -306,8 +306,216 @@ ws.disconnect();
 ```
 
 
+## 스프링 웹 플럭스로 리액티브 애플리케이션 개발하기
+- 리액티브 프로그래밍은 데이터 흐름과 변화 전파에 중점을 둔 프로그래밍 패러다임
+- 리액티브 프로그래밍은 넌블로킹 함수형 프로그래밍이 사용됨
+- 리액티브 프로그래밍은 많은 요청을 동시에 처리하고 대기 시간이 긴 작업을 효율적으로 처리할 수 있는 장점이 있음
+- Flux와 Momo는 데이터의 흐름을 나타내는 객체
+
+스프링 웹 플럭스는 사용자의 요청을 HttpHandler 인터페이스로 처리하게된다.
+
+```java
+public interface HttpHandler {
+	Mono<Void> handle(ServerHttpRequest request, ServerHttpResponse response);
+}
+```
+
+HttpHandler 인터페이스를 사용하기 위해서는 컨테이너(WAS)를 스프링 웹플럭스에 등록하여야한다. 스프링 웹 플럭스는 다양한 컨테이너를 등록시키기 위한 HandlerAdapter 인터페이스를 제공한다.
+
+| 런타임 | 어댑터 |
+| ----------- | ---------------- |
+| 서블릿 3.1 컨테이너 | ServletHttpHandlerAdapter |
+| 톰캣 | ServletHttpHadlerAdapter 또는 TomcatHttpHandlerAdapter | 
+| 제티 | ServletHttpHandlerAdapter 도는 JettyHttpHandlerAdapter |
+| 리액터 네티 | ReactorHttpHandlerAdapter |
+| Rx 네티 | RxNettyHttpHadlerAdatpter |
+| 언더토우 | UndertowHttpHandlerAdapter |
+
+***WEB Flux 설정***
+```java
+public static void main(String[] args) {
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContex(WebFluxConfiguration.class);
+    HttpHandler handler = WebHttpHandlerBuilder.applicationContext(context).build();
+    ReactorHttpHandlerAdapter adapter = new ReactorHttpHandlerAdapter(handler);
+    HttpServer.create("localhost", 8090).newHandler(adapter).block();
+}
+
+@Configuration
+@EnableWebFlux
+@ComponentScan
+public class WebFluxConfiguration implements WebFluxConfigurer {
+
+    @Bean
+    public SpringResourceTemplateResolver thymeleafTemplateResolver() {
+
+        final SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
+        resolver.setPrefix("classpath:/templates/");
+        resolver.setSuffix(".html");
+        resolver.setTemplateMode(TemplateMode.HTML);
+        return resolver;
+    }
+
+    @Bean
+    public ISpringWebFluxTemplateEngine thymeleafTemplateEngine(){
+
+        final SpringWebFluxTemplateEngine templateEngine = new SpringWebFluxTemplateEngine();
+        templateEngine.addDialect(new Java8TimeDialect());
+        templateEngine.setTemplateResolver(thymeleafTemplateResolver());
+        return templateEngine;
+    }
+
+
+    @Bean
+    public ThymeleafReactiveViewResolver thymeleafReactiveViewResolver() {
+
+        final ThymeleafReactiveViewResolver viewResolver = new ThymeleafReactiveViewResolver();
+        viewResolver.setTemplateEngine(thymeleafTemplateEngine());
+        viewResolver.setResponseMaxChunkSizeBytes(16384);
+        return viewResolver;
+    }
+
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        registry.viewResolver(thymeleafReactiveViewResolver());
+    }
+}
+```
+
+***간단한 검색 기능의 웹 플럭스 프로그램***
+```java
+@Controller
+public class StudentController {
+
+    private final StudentService studentService;
+
+    @Autowired
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
+
+    @GetMapping("/")
+    public String getStudent(Model model) {
+        Flux<Student> students = studentService.findAll();
+        IReactiveDataDriverContextVariable react = new ReactiveDataDriverContextVariable(students, 1);
+        model.addAttribute("students", react);
+        return "student";
+    }
+
+    @PostMapping("/")
+    public String addStudent(ServerWebExchange exchange, Model model) {
+        Flux<Student> searched = exchange
+                                .getFormData()
+                                .map(form-> form.get("name"))
+                                .flatMapMany(Flux::fromIterable)
+                                .concatMap(studentService::search);
+
+        IReactiveDataDriverContextVariable variable = new ReactiveDataDriverContextVariable(searched, 1);
+
+        model.addAttribute("students", variable);
+        return "student";
+    }
+}
+
+@Service
+public class StudentService {
+
+    private ArrayList<Student> students = new ArrayList<>();
+
+    public StudentService() {
+        students.add(new Student("kim rara", 20));
+        students.add(new Student("kim sin young", 52));
+        students.add(new Student("lee sun sin", 21));
+        students.add(new Student("lee san", 21));
+        students.add(new Student("park chan ho", 22));
+        students.add(new Student("hong gil dong", 31));
+        students.add(new Student("ki soun young", 22));
+        students.add(new Student("son hug min", 22));
+        students.add(new Student("kang ho dong", 22));
+    }
+
+    public Flux<Student> findAll() {
+        return Flux.fromIterable(students).delayElements(Duration.ofSeconds(2));
+    }
+
+    public Flux<Student> search(String name) {
+        return Flux
+                .fromStream(students.stream()
+                .filter(student -> student.getName().startsWith(name))).delayElements(Duration.ofSeconds(2));
+    }
+}
+```
+
+## 리액티브 REST 서비스를 만들고 비동기 웹 클라이언트로 REST 정보 가져오기
+@ResponseBody 또는 @RestController를 사용하고 반환형이 Mono나 Flux인 핸들러 매퍼를 사용하면 리액티브 REST 서비스를 사용할 수 있다.  
+스프링에서는 REST API를 비동기적으로 소비하기위해 WebClient라는 인터페이스를 제공한다. 이전에 사용되던 AsyncRestTemplate은 권장되지 않는다.  
+
+***리액티브 Rest 발행과 웹 클라이언트로 REST data 얻기***
+
+```java
+@GetMapping("/rest")
+@ResponseBody
+public Flux<Student> getRest() {
+    return studentService.findAll();
+}
+```
+
+```java
+@Test
+public void restTest() throws IOException {
+    final String url = "http://localhost:8080/";
+    WebClient.create(url)
+            .get()
+            .uri("/rest")
+            .accept(MediaType.APPLICATION_STREAM_JSON)
+            .exchange()
+            .flatMapMany(clientResponse -> clientResponse.bodyToFlux(String.class))
+            .subscribe(System.out::println);
+    System.in.read();
+}
+```
+
+## 핸들러 기반의 REST API 만들기
+스프링에서 리액티브 REST를 만들때, 컨트롤러 기반이 아닌 핸들러 기반으로도 REST 서비스를 만들 수 있다.  
+만드는 방법은 ServerRequest를 받아 Mono<ServerResponse>를 반환하는 메서드를 작성한 다음, 이 메서드를 라우터 함수로 매핑한다.
+
+***핸들러 함수 작성하기***
+```java
+public Mono<ServerResponse> getAllNotice(ServerRequest request) {
+    return ServerResponse.ok()
+            .contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8)
+            .body(BodyInserters.fromObject(noticeRepository.findAll()));
+}
+public Mono<ServerResponse> getOneNotice(ServerRequest request) {
+    return ServerResponse.ok()
+            .contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8)
+            .body(BodyInserters.fromObject(noticeRepository.findById(Long.parseLon(request.pathVariable("id")))));
+}
+```
+
+
+***요청을 핸들러 함수로 보내기***
+```java
+@Bean
+RouterFunction<ServerResponse> getAll(NoticeHandler noticeHandler) {
+    return RouterFunctions.route(RequestPredicates.GET("/notice/get/all").an(RequestPredicates.accept(MediaType.APPLICATION_JSON_UTF8))
+            , noticeHandler::getAllNotice);
+}
+@Bean
+RouterFunction<ServerResponse> getOne(NoticeHandler noticeHandler) {
+    return RouterFunctions.route(RequestPredicates.GET("/notice/get/one/{id}").an(RequestPredicates.accept(MediaType.APPLICATION_JSON_UTF8))
+            , noticeHandler::getOneNotice);
+}
+```
+
+
+
 참고자료  
 [WebApplicationInitializer로 Spring MVC 설정하기](http://blog.naver.com/PostView.nhn?blogId=take0415&logNo=221017059396&redirect=Dlog&widgetTypeCall=true)
+
+[Understanding Reactive types](https://spring.io/blog/2016/04/19/understanding-reactive-types)
+
+[리엑티브 선언문](https://www.reactivemanifesto.org/ko)
+
 
 
 참고도서  
