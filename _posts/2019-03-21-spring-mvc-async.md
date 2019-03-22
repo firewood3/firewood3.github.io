@@ -538,9 +538,9 @@ RouterFunction<ServerResponse> getOne(NoticeHandler noticeHandler) {
 
 
 참고자료  
-[WebApplicationInitializer로 Spring MVC 설정하기](http://blog.naver.com/PostView.nhn?blogId=take0415&logNo=221017059396&redirect=Dlog&widgetTypeCall=true)
-[Understanding Reactive types](https://spring.io/blog/2016/04/19/understanding-reactive-types)
-[리엑티브 선언문](https://www.reactivemanifesto.org/ko)
+[WebApplicationInitializer로 Spring MVC 설정하기](http://blog.naver.com/PostView.nhn?blogId=take0415&logNo=221017059396&redirect=Dlog&widgetTypeCall=true)  
+[Understanding Reactive types](https://spring.io/blog/2016/04/19/understanding-reactive-types)  
+[리엑티브 선언문](https://www.reactivemanifesto.org/ko)  
 
 
 
