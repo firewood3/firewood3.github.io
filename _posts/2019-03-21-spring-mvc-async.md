@@ -25,13 +25,13 @@ categories: java spring
 
 ## 컨트롤러에서 HTTP 요청을 비동기 처리하기
 - HTTP 요청을 비동기 처리하기 위해서 TaskExecutor를 사용한다.
-- 서블릿을 등록할때 isAsyncSupport를 true로 해주면 서블릿이 비동기로 작동한다.
+- 서블릿을 등록할때 isAsyncSupport를 true로 해주면 서블릿이 비동기를 지원하지 않는다.
 - isAsyncSupport의 기본값은 true이다.
 - HTTP 요청을 비동기 처리하는 4가지 방법
-    - Callable
-    - DeferredResult
-    - CompletableFuture
-    - ListenableFuture
+    - Callable : 사용할 쓰레드를 선택할 수 없음(미리 설정된 쓰레드를 사용하거나, 스프링에서 생성해주는 쓰레드를 사용해야함)
+    - DeferredResult: 사용할 쓰레드를 선택할 수 있음
+    - CompletableFuture: 자바의 Future를 구현, 사용할 쓰레드를 선택할 수 있으며, 쓰레드를 선택하지않으면 JVM에서 가용한 기본 Fork/Join 풀을 사용하여 실행됨
+    - ListenableFuture: 자바의 Future를 구현, 스프링의 AsyncListenableTaskExecutor를 미리 빈으로 등록 후 해당 쓰레드를 사용해야함
 
 
 ***서블릿의 isAsyncSupport의 기본값***
