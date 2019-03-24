@@ -209,12 +209,140 @@ public void addStudentsToSchool() {
 [GitHub: firewood3's Spring-Data-Jpa](https://github.com/firewood3/spring/tree/master/spring-boot-data/spring-boot-data-jpa)
 
 ## 6.3 QueryDSL을 이용한 Type Safe한 쿼리 작성
+QueryDSL은 일종의 표현식으로 데이터베이스의 질의를 별도의 SQL을 사용하지 않고 기존 언어의 메서드를 사용해서 데이터베이스에 질의를 할 수 있는 도구이다. SQL 쿼리는 문자 형식으로 작성하게 되는데 이는 타입 체크가 불가능하고 실행해 보기 전까지는 테스트가 안된다. QueryDSL은 SQL을 java로 type-safe하게 개발 할 수 있게 해준다.
 
-### 
+[참고 QueryDSL 공식사이트](http://www.querydsl.com/static/querydsl/4.0.1/reference/ko-KR/html_single/#intro)
+
+[참고 nklee 블로그 Type Safe](https://lng1982.tistory.com/285) 
+
+[참고 SpringBoot + Maven + QueryDsl](https://noep.github.io/2017/05/03/springboot-querydsl/)
+
+### 6.3.1 QueryDSL 설정
+
+#### 의존성 추가
+```maven
+<dependency>
+    <groupId>com.querydsl</groupId>
+    <artifactId>querydsl-jpa</artifactId>
+    <version>4.2.1</version>
+</dependency>
+<dependency>
+    <groupId>com.querydsl</groupId>
+    <artifactId>querydsl-apt</artifactId>
+    <version>4.2.1</version>
+</dependency>
+<dependency>
+    <groupId>com.querydsl</groupId>
+    <artifactId>querydsl-core</artifactId>
+    <version>4.2.1</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+```
+
+#### Q클래스 생성 설정
+querysql에서 쿼리를 작성하려면 Q클래스라고 불리는 구현체를 생성해야한다. 컴파일시에 JPAAnnotationProcessor가 작동하도록 하여 Q 클래스를 생성하도록 한다.
+
+```maven
+<plugin>
+    <groupId>com.mysema.maven</groupId>
+    <artifactId>apt-maven-plugin</artifactId>
+    <version>1.0.9</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>process</goal>
+            </goals>
+            <configuration>
+                <outputDirectory>target/generated-sources/java</outputDirectory>
+                <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+                <options>
+                    <querydsl.entityAccessors>true</querydsl.entityAccessors>
+                </options>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+```
+
+*Maven 빌드를 하면 Entity에 대한 Q클래스가 생성된다.*
+```java
+/**
+ * QMemberEntity is a Querydsl query type for MemberEntity
+ */
+@Generated("com.querydsl.codegen.EntitySerializer")
+public class QMemberEntity extends EntityPathBase<MemberEntity> {
+
+    private static final long serialVersionUID = 1199583908L;
+
+    public static final QMemberEntity memberEntity = new QMemberEntity("memberEntity");
+
+    public final NumberPath<Integer> age = createNumber("age", Integer.class);
+
+    public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final StringPath name = createString("name");
+
+    public QMemberEntity(String variable) {
+        super(MemberEntity.class, forVariable(variable));
+    }
+
+    public QMemberEntity(Path<? extends MemberEntity> path) {
+        super(path.getType(), path.getMetadata());
+    }
+
+    public QMemberEntity(PathMetadata metadata) {
+        super(MemberEntity.class, metadata);
+    }
+
+}
+```
+
+### 6.3.2 QueryDslRepositorySupport 활용
+Spring Data JPA에서는 queryDSL을 함께 사용할 수 있는 기반 클래스를 제공하는데, 그 클래스가 QueryDslRepositorySupport이다. 그래서 Spring Data JPA를 사용할 때 기존 Repository에 기능을 추가하는 형태로 개발을 진행할 수 있다.   QueryDslRepositorySupport 추상 클래스의 구현체를 만드는 방법은 다음과 같다.
+
+1. Q 클래스 생성
+2. 커스텀 Repository 인터페이스 생성
+3. QueryDslRepositorySupport 추상클래스와 커스텀 Repository의 구현체 생성
+
+#### MemberRepositoryCustom 클래스 생성
+```java
+public interface MemberRepositoryCustom {
+    List findAllLike(String keyword);
+}
+```
+
+#### QueryDslRepositorysupport 추상클래스의 구현체 생성 및 커스텀 인터페이스에 맞는 쿼리 작성
+```java
+public class MemberRepositoryImpl extends QuerydslRepositorySupport implements MemberRepositoryCustom {
+    public MemberRepositoryImpl() {
+        super(MemberEntity.class);
+    }
+
+    @Override
+    @Autowired
+    public void setEntityManager(EntityManager entityManager) {
+        super.setEntityManager(entityManager);
+    }
+
+    @Override
+    public List findAllLike(String keyword) {
+        QMemberEntity qMemberEntity = QMemberEntity.memberEntity;
+        JPQLQuery<MemberEntity> query = from(qMemberEntity);
+        List<MemberEntity> entityList = query.where(qMemberEntity.name.like(keyword)).fetch();
+        return entityList;
+    }
+}
+```
+
+[GitHub: firewood3's Spring-Data-QueryDsl](https://github.com/firewood3/spring/tree/master/spring-boot-data/spring-data-querydsl)
+
 
 ***
 
-출처
+참고도서
 제목: 스프링 부트로 배우는 자바 웹 개발
 지은이: 윤석진
 펴낸곳: 제이펍
