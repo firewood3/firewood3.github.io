@@ -4,6 +4,8 @@ date: 2019-03-23 19:00:00 -0400
 categories: java spring
 ---
 
+
+
 ## 6.1 데이터베이스 프로그래밍
 
 다양한 데이터베이스를 공통적으로 대응할 수 있도록 자바에서는 JDBC(JAVA Database Connectivity)라는 공통된 스펙을 제공하고 벤더는 이를 기반으로 개발자에게 자바에서 사용할 수 있는 접속 라이브러리를 제공한다. 그리서 서로다른 데이터베이스라고 하더라도 벤더에서 제공하는 JDBC 라이브러리가 있으면 동일한 메서드를 사용해 서로다른 데이터베이스를 조작할 수 있다.
@@ -59,27 +61,161 @@ public void beforeCreate() {
     createdAt = new Date();
 }
 ```
+
 #### 6.2.2.4 값 매핑
+자바의 ENUM 데이터를 데이터베이스와 매핑할때는 @Enumerated 어노테이션을 사용한다.  
+@Column을 사용하여 컬럼 속성을 명시할 수 있다.  
+
+**@Enumerated**  
+
+| EnumType | 데이터 베이스 할당값 |
+| ----------- | ---------------- |
+| ORDINAL | INT 값으로 할당됨 |
+| STRING | 문자열로 할당됨 |
+
 
 ```java
+public enum MemberRole {
+    USER,
+    ADMIN
+}
 ```
-#### 6.2.2.5 User Repository 클래스 작성
 
 ```java
+@Column(name = "age", length = 100)
+private Integer age;
+@Column(name = "role")
+@Enumerated(EnumType.STRING)
+private MemberRole role;
+```
+
+#### 6.2.2.5 User Repository 클래스 작성
+Repository는 Entity 조작에 필요한 쿼리를 메서드화 해서 사용할 수 있는 역할을 한다. 필드 검색을 하기 위해서 메서드 이름으로 쿼리를 생성할 수 있다.
+
+```code
+반환 타입 findBy필드명(매개변수)
+```
+
+```java
+@Repository
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    Member findByName(@Param("name") String name);
+}
 ```
 
 ### 6.2.3 연관 관계
+연관(Association) 관계는 하나 이상의 객체가 연결되어 있는 상태를 나타낸다. 이때 연결은 하나의 객체가 다른 객체를 소유하거나 참조하는 형태가 된다.
 
 #### 6.2.3.1 N:1(다대일)
+JPA에서 다대일 관계를 객체로 표현하기 위해서 @ManyToOne 어노테이션과 @JoinColumn 어노테이션을 사용한다.
+
+**@ManyToOne, @OneToMany**  
+
+| fetch | 로딩 방법 |
+| ----------- | ---------------- |
+| EAGER | 즉시 로딩 |
+| LAZY | 지연 로딩 |
+
+**객체에서의 학생과 학교의 관계 표현**  
+
+*학생*
+```java
+@Data
+@Entity
+@NoArgsConstructor
+public class School {
+    @Id
+    @Column(name = "SCHOOL_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "SCHOOL_NAME")
+    private String name;
+    private String address;
+}
+```
+
+*학교*
+```java
+@Data
+@Entity
+@NoArgsConstructor
+public class Student {
+    @Id
+    @Column(name = "STUDENT_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "STUDENT_NAME")
+    private String name;
+    private String grade;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SCHOOL_ID")
+    private School school;
+}
+```
+
+*연관 관계 설정*
+```java
+@Transactional
+public void addSchoolToStudent() {
+    School school = new School("신촌초등학교");
+    schoolRepository.save(school);
+
+    Student student1 = new Student("서준");
+    Student student2 = new Student("서연");
+    Student student3 = new Student("서언");
+
+    student1.setSchool(school);
+    student2.setSchool(school);
+    student3.setSchool(school);
+
+    studentRepository.save(student1);
+    studentRepository.save(student2);
+    studentRepository.save(student3);
+}
+```
+
 
 #### 6.2.3.2 1:N 관계
+JPA에서 일대다 관계를 객체로 표현하기 위해서 @OneToMany(mappedBy="mapping_param")을 사용한다. mappedBy는 연관 관계의 주인을 명시하기 위해 사용하는데 연관 관계의 주인은 다수 쪽이다. 
 
+*연관 관계 설정*
+```java
+@OneToMany(mappedBy = "school")
+private List<Student> students;
+```
 
+```java
+@Transactional
+public void addStudentsToSchool() {
+    Student student1 = new Student("고길동");
+    Student student2 = new Student("김연아");
+    studentRepository.save(student1);
+    studentRepository.save(student2);
+    Student student3 = new Student("박찬호");
+    Student student4 = new Student("손흥민");
+    studentRepository.save(student3);
+    studentRepository.save(student4);
+
+    School school1 = new School("한국 고등학교");
+    school1.setStudents(Arrays.asList(student1, student2));
+    School school2 = new School("국제 고등학교");
+    school2.setStudents(Arrays.asList(student3, student4));
+
+    schoolRepository.save(school1);
+    schoolRepository.save(school2);
+}
+```
+
+[GitHub: firewood3's Spring-Data-Jpa](https://github.com/firewood3/spring/tree/master/spring-boot-data/spring-boot-data-jpa)
+
+## 6.3 QueryDSL을 이용한 Type Safe한 쿼리 작성
+
+### 
 
 ***
 
-스터디 도서  
-제목: 스프링 부트로 배우는 자바 웹 개발  
-지은이: 윤석진  
-펴낸곳: 제이펍 
+출처
+제목: 스프링 부트로 배우는 자바 웹 개발
+지은이: 윤석진
+펴낸곳: 제이펍
 
