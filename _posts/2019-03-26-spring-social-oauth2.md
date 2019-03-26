@@ -11,6 +11,7 @@ categories: java spring
 ## 스프링 소셜을 사용해 트위터와 페이스북의 사용자 정보 가져오기
 
 *스프링 소셜 모듈*
+
 | 모듈 | 설명 |
 | ----------- | ---------------- |
 | spring-social-core | 스프링 소셜의 코어 모듈. 메인/공유 인프라 클래스가 들어 있습니다. |
@@ -219,7 +220,7 @@ public class Oauth2Config extends WebSecurityConfigurerAdapter {
 }
 ```
 
-[샘플코드 GitHub](https://github.com/firewood3/spring/tree/master/spring-oauth/springboot-oauth2-client)
+[샘플코드 GitHub : Oauth2를 사용하여 구글의 사용자 정보 얻어오기](https://github.com/firewood3/spring/tree/master/spring-oauth/springboot-oauth2-client)
 
 
 
