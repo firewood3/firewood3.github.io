@@ -21,8 +21,6 @@ categories: java spring
 | spring-social-twitter | 스프링 소셜의 트위터 모듈 |
 | spring-social-facebook | 스프링 소셜의 페이스북 모듈 |
 
-@Configuration 구성 클래스에 @EnableSocial을 붙이면 스프링 소셜 기능이 켜지고 SicialConfigurer 빈이 있으면 자동으로 감지합니다. SocialConfigurer는 하나 이상의 서비스 공급자 구성을 추가할 때 쓰는 빈입니다. SocialConfigurer 인터페이스 구현체인 SocialConfigurerAdapter 추상클래스의 구현체를 작성하여 스프링 소셜에 대한 설정을 할 수 있습니다. 스프링 소셜에서는 UserIdSource 인스턴스로 현재 유저를 식별하고 이 유저를 이용해 서비스 공급자에 접속 간으한 커넥션을 찾습니다. 이렇게 찾은 커넥션은 유저별로 ConnectionRepository에 보관합니다. 어떤 ConnectionRepository를 골라쓸지는 현재 유저에 해당하는 UsersConnecetionRepository 인터페이스에 의해 결정됩니다.
-
 - 구성 클래스에서 @EnableSocial 어노테이션을 사용해 SocialConfigurer 인터페이스를 빈으로 등록한다.
 - 유저별로 소셜에 접근한 커넥션을 보관하는 ConnectionRepository 제어하는 ConnectionController를 구성합니다.
 - SocialConfigurer 빈의 addConnectionFactories 메소드를 사용해 소셜의 [AppId]와 [AppSecret]을 등록합니다.
