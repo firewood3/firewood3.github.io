@@ -174,6 +174,19 @@ protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 }
 ```
 
+## Thymeleaf에서 보안 처리하기
+Thymeleaf의 sec:authorize 속성을 이용하여 사용자 인증이 완료되었는지 아닌지를 확인 할 수 있다.
+
+```html
+<div sec:authorize="isAuthenticated()">
+</div>
+```
+
+그리고 Thymeleaf의 sec:authentication 속성을 이용하면 로그인한 사용자의 아이디 정보도 불러올 수 있다.
+```html
+<span sec:authentication="name"></span>
+```
+
 
 이번 글에 사용된 프로젝트는 [GitHub](https://github.com/firewood3/spring/tree/master/spring-security/springboot-security-login)에서 확인할 수 있다. 샘플코드에서 암호화된 비밀번호는 1111이다.
 
