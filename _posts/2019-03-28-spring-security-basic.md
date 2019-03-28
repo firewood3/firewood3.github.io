@@ -1,7 +1,7 @@
 ---
 title: "Springboot + spring security + h2 + jpa + thymeleaf로 URL 접근 보안 구현하기"
 date: 2019-03-28 17:30:00 -0400
-categories: java spring
+categories: java spring security
 ---
 
 ## 시작하기
