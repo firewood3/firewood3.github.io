@@ -4,7 +4,7 @@ date: 2019-03-30 15:52:00 -0400
 categories: PostgreSQL
 ---
 
-## CentOS 6에 PostgreSQL 10 설치하기
+## CentOS6에 PostgreSQL10 설치하기
 
 **리파지토리 추가**
 ```code
