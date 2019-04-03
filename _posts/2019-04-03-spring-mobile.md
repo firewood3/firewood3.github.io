@@ -125,15 +125,7 @@ public class MobileConfiguration extends WebMvcConfigurationSupport {
 }
 ```
 
-**Default Cookie Name**
-```java
-public class CookieSitePreferenceRepository extends CookieGenerator implements SitePreferenceRepository {
-...
-private static final String DEFAULT_COOKIE_NAME = CookieSitePreferenceRepository.class.getName() + ".SITE_PREFERENCE";
-...
-}
-```
-
+[샘플코드 : 디바이스 감지하기와 입력받은 디바이스 값 쿠키에 저장하기](https://github.com/firewood3/spring/tree/master/spring-mobile/mobile-filter)
 
 
 
