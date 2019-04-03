@@ -46,7 +46,7 @@ public class CustomAutoConfiguration {
 
 autoconfigure 클래스는 스프링 부트가 실행될때 classpath의 META-INF 하위의 spring.fatories라는 파일을 찾고, EnableAutoConfiguration 어노테이션을 사용하여 구성할 클래스를 로드한다.
 
-*spring.fatories*
+***spring.fatories***
 ```xml
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.firewood.myspringbootmodule.autoconfig.CustomAutoConfiguration
 ```
@@ -55,6 +55,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.firewood.mysp
 
 ## 커스텀 스프링 부트 사용하기
 커스텀 스프링 부트 모듈을 사용하려면 jar 파일을 pom에 의존성을 추가하여야 한다.
+
 [Adding dependencies to local .jar files in pom.xml](https://gist.github.com/timmolderez/92bea7cc90201cd3273a07cf21d119eb)
 
 ```java
