@@ -216,6 +216,70 @@ public String home() {
 [샘플코드 : 스프링 모바일 / 디바이스에 따라 다른 뷰 랜더링 하기](https://github.com/firewood3/spring/tree/master/spring-mobile/mobile-depended-view)
 
 
+## 디바이스에 따라 사이트 스위칭 구현하기
+스프링 모바일의 SiteSwitcherHandlerInterceptor 클래스는 감지한 Device값에 따라 모바일 전용 웹 사이트로 전환할 수 있다. 다음과 같은 팩토리 메소드를 사용하여 리다이렉트 되는 URL을 설정하고 SiteSwitcherHandlerInterceptor 객체를 생성한다.
+
+*SiteSwitcherHandlerInterceptor 팩토리 메소드*
+
+| 팩토리 메서드 | 설명 | 
+| ---- | ---- |
+| mDot() | m.으로 시작하는 도메인으로 리다이렉트 합니다. <br>ex) http://www.yourdomain.com -> http://m.yourdomain.com |
+| dotMobi() | .mobi로 끝나는 도메인으로 리다이렉트 합니다. <br>ex) http://www.yourdomain.com -> http://www.yourdomain.mobi |
+| urlPath() | 기기마다 서로다른 컨텍스트 루트를 설정해서 정해진 URL 경로로 리다이렉트 합니다. <br>ex) http://www.yourdomain.com -> http://www.yourdomain.com/mobile |
+| standard() | 웹 사이트의 도메인을 모바일, 태블릿, 그리고 일반 버전별로 지정 가능한 가장 유연한 팩토리 메서드 입니다. |
+
+***mDot, dotMobi, urlPath는 모두 standard 메소드를 사용한다.***
+
+### urlPath() 펙토리 메소드를 사용하여 사이트 스위칭 구현하기
+SiteSwitcherHandlerInterceptor 클래스를 urlPath() 펙토리 메소드로 생성하고 빈으로 등록하고 WebMvc의 인터셉터로 등록한다.
+
+*디바이스별 리다이렉트 주소*
+- 모바일: /m
+- 테블릿: /t
+- 노멀: /
+
+```java
+@Bean
+public SiteSwitcherHandlerInterceptor siteSwitcherHandlerInterceptor() {
+    return SiteSwitcherHandlerInterceptor.urlPath("/m", "/t", "/");
+}
+@Override
+protected void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(siteSwitcherHandlerInterceptor());
+}
+```
+
+디바이스별로 리다이렉트되는 요청을 받을 수 있도록 컨트롤러를 각각 만들어 준다.
+```java
+@Controller
+@RequestMapping("/m")
+public class MobileController {
+    @GetMapping("/home")
+    public String home() {
+        return "home";
+    }
+}
+
+@Controller
+@RequestMapping("/t")
+public class TabletController {
+    @GetMapping("/home")
+    public String home() {
+        return "home";
+    }
+}
+
+@Controller
+public class NormalController {
+    @GetMapping("/home")
+    public String home() {
+        return "home";
+    }
+}
+```
+
+[샘플코드 : 스프링 모바일 / 디바이스에 따라 사이트 스위칭 구현하기](https://github.com/firewood3/spring/tree/master/spring-mobile/mobile-switching-site)
+
 
 ***
 참고도서  
