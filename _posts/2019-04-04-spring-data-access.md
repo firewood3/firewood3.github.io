@@ -287,10 +287,8 @@ public int countAll() {
 }
 ```
 
-## JDBC 템플릿으로 DB 조회하기
+## JDBC 템플릿 주입하기
 필요할 때마다 JdbcTemplate 인스턴스를 새로 만들면 생성문을 반복하며 객체를 생성해야 하므로 비용 면에서 비효율 적이다. JdbcTemplate는 스레드-안전한(thread-safe) 클래스여서 IoC 컨테이너에 인스턴스를 하나만 선언하고 모든 DAO 인스턴스에 주입해 쓸 수 있다.
-
-### JDBC 템플릿 주입하기
 
 *JDBC 템플릿을 주입받을 DAO 클래스*
 ```java
