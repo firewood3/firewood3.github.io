@@ -128,6 +128,92 @@ public class MobileConfiguration extends WebMvcConfigurationSupport {
 [샘플코드 : 디바이스 감지하기와 입력받은 디바이스 값 쿠키에 저장하기](https://github.com/firewood3/spring/tree/master/spring-mobile/mobile-filter)
 
 
+## 기기 정보에 따라 뷰 렌더링 하기
+
+### 방법1 수동으로 뷰 렌더링 선택하기
+다음과 같이 HTTP 요청에서 Device 정보를 읽고 읽어들인 디바이스 정보를 분석하여 각각 다른 뷰를 내려주도록 코딩할 수 있다.
+
+```java
+@GetMapping("/home")
+public String home(HttpServletRequest request) {
+    Device device = DeviceUtils.getCurrentDevice(request);
+    if (device.isMobile()) {
+        return "mobile/home";
+    } else if (device.isTablet()) {
+        return "tablet/home";
+    } else {
+        return "home";
+    }
+}
+```
+
+다음과 같이 WebMvc 구성에 DeviceHandlerMethodArgumentResolver를 빈으로 등록하면 Device 값을 컨트롤러 메서드의 인수로 전달 받을 수 있다.
+```java
+@Configuration
+public class MobileConfiguration extends WebMvcConfigurationSupport {
+    ...
+    @Override
+    protected void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        argumentResolvers.add(new DeviceHandlerMethodArgumentResolver());
+    }
+}
+```
+
+```java
+@GetMapping("/home")
+public String home(Device device) {
+    if (device.isMobile()) {
+        return "mobile/home";
+    } else if (device.isTablet()) {
+        return "tablet/home";
+    } else {
+        return "home";
+    }
+}
+```
+
+### 방법2 뷰 렌더링 선택 자동화 하기
+스프링 모바일의 LiteDeviceDelegatingViewResolver를 이용하면 뷰 이름을 진짜 뷰 리졸버로 넘겨 주기 전에 추가 접두어/접미어를 덧붙일 수 있다.
+
+*LiteDeviceDelegatingViewResolver를 빈으로 등록*
+```java
+@Bean
+public ViewResolver mobileViewResolver() {
+    LiteDeviceDelegatingViewResolver delegatingViewResolver = new LiteDeviceDelegatingViewResolver(viewResolver());
+    delegatingViewResolver.setOrder(1);
+    delegatingViewResolver.setMobilePrefix("mobile/");
+    delegatingViewResolver.setTabletPrefix("tablet/");
+    return delegatingViewResolver;
+}
+```
+
+*LiteDeviceDelegatingViewReoslver 클래스에서 뷰를 해석하는 코드*
+```java
+public class LiteDeviceDelegatingViewResolver extends AbstractDeviceDelegatingViewResolver {
+...
+	@Override
+	protected String getDeviceViewNameInternal(String viewName) {
+    	if (ResolverUtils.isNormal(device, sitePreference)) {
+			resolvedViewName = getNormalPrefix() + viewName + getNormalSuffix();
+		} else if (ResolverUtils.isMobile(device, sitePreference)) {
+			resolvedViewName = getMobilePrefix() + viewName + getMobileSuffix();
+		} else if (ResolverUtils.isTablet(device, sitePreference)) {
+			resolvedViewName = getTabletPrefix() + viewName + getTabletSuffix();
+		}
+    }
+}
+```
+
+LiteDeviceDelegatingViewResolver로 디바이스 별로 뷰를 선택하는 작업을 위임했으므로, 다음과 같이 핸들러 매핑 메소드는 간단해진다.
+
+```java
+@GetMapping("/home")
+public String home() {
+    return "home";
+}
+```
+
+[샘플코드 : 스프링 모바일 / 디바이스에 따라 다른 뷰 랜더링 하기](https://github.com/firewood3/spring/tree/master/spring-mobile/mobile-depended-view)
 
 
 
