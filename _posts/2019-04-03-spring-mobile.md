@@ -173,7 +173,7 @@ public String home(Device device) {
 ```
 
 ### 방법2 뷰 렌더링 선택 자동화 하기
-스프링 모바일의 LiteDeviceDelegatingViewResolver를 이용하면 뷰 이름을 진짜 뷰 리졸버로 넘겨 주기 전에 추가 접두어/접미어를 덧붙일 수 있다.
+스프링 모바일의 LiteDeviceDelegatingViewResolver를 이용하면 Device 값과 SitePreferences값을 해석하여 뷰 이름을 진짜 뷰 리졸버로 넘겨 주기 전에 추가 접두어/접미어를 덧붙일 수 있다.
 
 *LiteDeviceDelegatingViewResolver를 빈으로 등록*
 ```java
