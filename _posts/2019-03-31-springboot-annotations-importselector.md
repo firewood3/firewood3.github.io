@@ -1,5 +1,5 @@
 ---
-title: "ImportSelector를 사용하여 구성 클래스 선택하기"
+title: "@Import 어노테이션과 ImportSelector 인터페이스"
 date: 2019-03-31 16:44:00 -0400
 categories: java spring annotation
 ---
