@@ -4,6 +4,10 @@ date: 2019-03-31 16:44:00 -0400
 categories: java spring annotation
 ---
 
+ImortSelector 인터에페이스를 사용하면 @Import 어노테이션을 사용할때 불러들일 구성 클래스를 선택할 수 있다.
+
+***Import 어노테이션은 구성 클래스를 로드하는 어노테이션이다.***
+
 ## @Import 어노테이션
 스프링 프레임워크를 사용하다보면 @EnableWebMvc, @EnableWebFlux, @EnableWebSocket이라는 어노테이션을 찾아볼 수 있다. 이러한 'Enable' 이라는 접두어가 붙는 어노테이션들은 내부적으로 @Import라는 어노테이션을 사용하여 속성으로 특정 구성클래스나 ImportSelector를 지정할 수 있으며 런타임 시 스프링 컨텍스트가 관리할 수 있도록 하고 있는 것이다.
 
