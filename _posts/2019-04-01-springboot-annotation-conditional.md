@@ -6,11 +6,11 @@ categories: java spring annotation
 
 ## 핵심
 
-@Conditional 어노테이션은 구성 클래스를 스프링 컨테이너로 등록할지 말지 선택할 수 있도록 하는 어노테이션이다.
+1. @Conditional 어노테이션은 구성 클래스를 스프링 컨테이너로 등록할지 말지 선택할 수 있도록 하는 어노테이션이다.
 
-@Conditional 어노테이션은 Condition 인터페이스 구현체를 속성으로 받고, Condition 인터페이스에는 boolean match() 함수가 정의 되어있는데 반환값이 true이면 스프링 컨테이너에 등록하고 false이면 스프링 컨테이너에 등록하지 않게 된다.
+2. @Conditional 어노테이션은 Condition 인터페이스 구현체를 속성으로 받고, Condition 인터페이스에는 boolean match() 함수가 정의 되어있는데 반환값이 true이면 스프링 컨테이너에 등록하고 false이면 스프링 컨테이너에 등록하지 않게 된다.
 
-Codition 인터페이스의 match() 함수는 자바 환경변수를 매개변수로 받을 수 있어서 @Conditional 어노테이션을 사용하면 환경 변수에 따라 다른 빈을 로드하도록 코딩할 수 있다.
+3. Codition 인터페이스의 match() 함수는 자바 환경변수를 매개변수로 받을 수 있어서 @Conditional 어노테이션을 사용하면 환경 변수에 따라 다른 빈을 로드하도록 코딩할 수 있다.
 
 ## @Conditional 어노테이션
 Conditional 어노테이션은 조건에 따라 자바 설정 클래스를 선택할 수 있게 해주는 어노테이션이다. 이를 사용하면 환경변수 설정 값으로 빈으로 등록할 POJO 클래스를 선택할 수 있다.
