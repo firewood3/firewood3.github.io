@@ -71,8 +71,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.firewood.mysp
 ## 커스텀 스프링 부트 사용하기
 커스텀 스프링 부트 모듈을 사용하려면 jar 파일을 pom에 의존성을 추가하여야 한다.
 
-[Adding dependencies to local .jar files in pom.xml](https://gist.github.com/timmolderez/92bea7cc90201cd3273a07cf21d119eb)
-
 ```java
 @SpringBootApplication
 public class MyCustomSpringbootApplication implements CommandLineRunner {
