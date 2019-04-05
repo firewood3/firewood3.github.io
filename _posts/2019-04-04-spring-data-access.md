@@ -137,26 +137,47 @@ JDBC API는 너무 저수준(low-level)이기 때문에 JDBC 템플릿을 이용
 
 **JDBC 템플릿으로 DB를 수정할때는 update() 메서드를 사용한다.**
 
-다음의 코드는 JDBC API의 insert부분을 JDBC 템플릿을 사용한 insert로 변환한 코드이다.
+JDBC API를 직접 사용했을 때는, DB Connection을 연결하고 해제하는 작업, PreparedStatement로 쿼리를 준비하고 실행시키는 과정, 예외를 처리하는 과정이 필요했지만 JDBC 템플릿을 사용하면 DB Connection은 JDBC 템플릿 객체의 생성과 종료와 함께 처리되고 예외처리도 JDBC 템플릿의 내부 메소드에서 throws Exception으로 처리해주므로 훨씬 코드가 깔끔해진다. 
 
-*JDBC API를 사용한 Insert*
+JDBC API의 PreparedStatement 객체를 생성하고 매개변수를 PreparedStatement에 바인딩하는 것을 JDBC 템플릿의 update() 메서드에서는 인터페이스 사용하여 PreparedStatement를 생성하거나 매개변수를 바인딩한다.
+
+*PreparedStatemenetCreator 인터페이스를 사용*
 ```java
 @Override
 public void insert(Vehicle vehicle) {
-    try (Connection conn = dataSource.getConnection();
-         PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
-        ps.setString(1, vehicle.getColor());
-        ps.setInt(2, vehicle.getWheel());
-        ps.setInt(3, vehicle.getSeat());
-        ps.setString(4, vehicle.getVehicleNo());
-        ps.executeUpdate();
-    } catch (SQLException e) {
-        throw new RuntimeException(e);
-    }
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(this.dataSource);
+    jdbcTemplate.update(new PreparedStatementCreator() {
+        @Override
+        public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+            PreparedStatement ps = con.prepareStatement(INSERT_SQL);
+            ps.setString(1, vehicle.getColor());
+            ps.setInt(2, vehicle.getWheel());
+            ps.setInt(3, vehicle.getSeat());
+            ps.setString(4, vehicle.getVehicleNo());
+            return ps;
+        }
+    });
 }
 ```
 
-*JDBC 템플릿을 사용한 Insert*
+*PreparedStatementSetter 인터페이스를 사용*
+```java
+@Override
+public void insert(Vehicle vehicle) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(this.dataSource);
+    jdbcTemplate.update(INSERT_SQL, new PreparedStatementSetter() {
+        @Override
+        public void setValues(PreparedStatement ps) throws SQLException {
+            ps.setString(1, vehicle.getColor());
+            ps.setInt(2, vehicle.getWheel());
+            ps.setInt(3, vehicle.getSeat());
+            ps.setString(4, vehicle.getVehicleNo());
+        }
+    });
+}
+```
+
+*매개변수 값으로 사용*
 ```java
 @Override
 public void insert(Vehicle vehicle) {
@@ -165,7 +186,7 @@ public void insert(Vehicle vehicle) {
 }
 ```
 
-JDBC API를 직접 사용했을 때는, DB Connection을 연결하고 해제하는 작업, PreparedStatement로 쿼리를 준비하고 실행시키는 과정, 예외를 처리하는 과정이 필요했지만 JDBC 템플릿을 사용하면 DB Connection은 JDBC 템플릿 객체의 생성과 종료와 함께 처리되고 예외처리도 JDBC 템플릿의 내부 메소드에서 throws Exception으로 처리해주므로 훨씬 코드가 깔끔해진다. 
+
 
 ***JDBC의 update() 메소드를 반복적으로 사용할때는 for문을 돌리지말고 batchUpdate() 메서드를 사용하라.***
 ```java
@@ -313,6 +334,88 @@ public JdbcTemplate jdbcTemplate(DataSource dataSource) {
     return new JdbcTemplate(dataSource);
 }
 ```
+
+## JdbcDaoSupport 클래스를 상속받고 setJdbcTemplate() 메소드를 사용하여 JDBC 템플릿 주입하기
+
+스프링 프레임워크에서는 JdbcDaoSupport 라는 추상 클래스를 제공해주는데, 이 추상 클래스의 맴버 변수는 JdbcTemplate 하나이다. 그리고 이 추상 클래스는 JdbcTemplate의 관리를 지원한다.
+
+***데이터베이스와 연결을 맺고 끝는 부분 기능을 구현할 때 JdbcDaoSupport 추상클래스를 상속받아 사용하면 편할 것 같다.***
+
+*스프링에서 제공하는 JdbcDaoSupport 추상 클래스*
+```java
+public abstract class JdbcDaoSupport extends DaoSupport {
+
+	@Nullable
+	private JdbcTemplate jdbcTemplate;
+
+	public final void setDataSource(DataSource dataSource) {
+		if (this.jdbcTemplate == null || dataSource != this.jdbcTemplate.getDataSource()) {
+			this.jdbcTemplate = createJdbcTemplate(dataSource);
+			initTemplateConfig();
+		}
+	}
+
+    protected JdbcTemplate createJdbcTemplate(DataSource dataSource) {
+		return new JdbcTemplate(dataSource);
+	}
+
+    @Nullable
+	public final DataSource getDataSource() {
+		return (this.jdbcTemplate != null ? this.jdbcTemplate.getDataSource() : null);
+	}
+
+	public final void setJdbcTemplate(@Nullable JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+		initTemplateConfig();
+	}
+    
+    @Nullable
+	public final JdbcTemplate getJdbcTemplate() {
+	  return this.jdbcTemplate;
+	}
+
+    protected void initTemplateConfig() {
+	}
+
+    @Override
+	protected void checkDaoConfig() {
+		if (this.jdbcTemplate == null) {
+			throw new IllegalArgumentException("'dataSource' or 'jdbcTemplate' is required");
+		}
+	}
+
+	protected final SQLExceptionTranslator getExceptionTranslator() {
+		JdbcTemplate jdbcTemplate = getJdbcTemplate();
+		Assert.state(jdbcTemplate != null, "No JdbcTemplate set");
+		return jdbcTemplate.getExceptionTranslator();
+	}
+
+	protected final Connection getConnection() throws CannotGetJdbcConnectionException {
+		DataSource dataSource = getDataSource();
+		Assert.state(dataSource != null, "No DataSource set");
+		return DataSourceUtils.getConnection(dataSource);
+	}
+    
+    protected final void releaseConnection(Connection con) {
+		DataSourceUtils.releaseConnection(con, getDataSource());
+	}
+}
+```
+
+JdbcDaoSupport를 상속받은 Dao 클래스에서 JdbcTemplate 빈을 주입받을 때는 다음과 같이 Dao 클래스의 생성자에서 JdbcDaoSupport 추상 클래스의 setJdbcTemplate 메소드를 호출하여 JdbcTemplate을 주입해주면 된다.
+
+*JdbcDaoSupport를 상속받은 Dao 클래스에서의 JdbcTemplate 빈 주입*
+```java
+public class JdbcVehicleDao extends JdbcDaoSupport implements VehicleDao {
+    ...
+    public JdbcVehicleDao(JdbcTemplate jdbcTemplate) {
+        setJdbcTemplate(jdbcTemplate);
+    }
+    ...
+}
+```
+
+
 
 
 ***
