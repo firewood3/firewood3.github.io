@@ -4,6 +4,11 @@ date: 2019-04-01 10:15:00 -0400
 categories: java spring annotation
 ---
 
+****@Conditional 어노테이션은 구성 클래스를 스프링 컨테이너로 등록할지 말지 선택할 수 있도록 하는 어노테이션이다.***
+
+****@Conditional 어노테이션은 Condition 인터페이스 구현체를 속성으로 받고, Condition 인터페이스에는 boolean match() 함수가 정의 되어있는데 반환값이 true이면 스프링 컨테이너에 등록하고 false이면 스프링 컨테이너에 등록하지 않게 된다.***
+
+
 ## @Conditional 어노테이션
 Conditional 어노테이션은 조건에 따라 자바 설정 클래스를 선택할 수 있게 해주는 어노테이션이다. 이를 사용하면 환경변수 설정 값으로 빈으로 등록할 POJO 클래스를 선택할 수 있다.
 
