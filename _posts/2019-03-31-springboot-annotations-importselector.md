@@ -4,6 +4,8 @@ date: 2019-03-31 16:44:00 -0400
 categories: java spring annotation
 ---
 
+## 핵심
+
 ****@Import 어노테이션은 구성 클래스를 로드하는 어노테이션이다.***
 
 ****@Import 어노테이션을 사용하면 @EnableWebMvc나 @EnableWebFlux 같은 자신만의 @Enable[MyConfiguration] 어노테이션을 제작하여 어노테이션 하나를 사용하므로써 필요한 구성클래스를 스프링 컨테이너에 로드할 수 있다.***
