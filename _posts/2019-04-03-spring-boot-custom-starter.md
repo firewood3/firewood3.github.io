@@ -4,7 +4,22 @@ date: 2019-04-03 11:52:00 -0400
 categories: java sprig
 ---
 
-스프링 부트의 'artifactId'는 spring-boot-starter-jpa, spring-boot-starter-webmvc 이런 식으로 spring-boot-starter로 시작되는데 이 starter라는 것은 AutoConfigurator를 기반으로 스프링 부트 애플리케이션에서 별도의 설정 없이 해당 모듈에서 지원하는 기능들을 편리하게 사용할 수 있도록 만든 모듈 규격이다. spring-boot-autoconfigure를 사용하면 커스텀하게 스프링부트 모듈을 제작하여 사용할 수 있다.
+## 개요
+스프링 부트의 'artifactId'는 spring-boot-starter-jpa, spring-boot-starter-webmvc 이런 식으로 spring-boot-starter로 시작되는데 이 starter라는 것은 AutoConfigurator를 기반으로 스프링 부트 애플리케이션에서 별도의 설정 없이 해당 모듈에서 지원하는 기능들을 편리하게 사용할 수 있도록 만든 모듈 규격이다.
+
+***spring-boot-autoconfigure를 사용하면 커스텀하게 스프링부트 모듈을 제작하여 사용할 수 있다.***
+
+자신의 스프링부트 jar 파일을 Pom.xml에 의존성을 추가하여 미리 제작한 빈을 사용할 수 있다.
+[로컬 jar 파일을 pom.xml로 로드하기](https://gist.github.com/timmolderez/92bea7cc90201cd3273a07cf21d119eb)
+
+```xml
+<dependency>
+   <groupId>com.firewood</groupId>
+   <artifactId>custom-starter</artifactId>
+   <version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
+
 
 ## 커스텀 스프링 부트 모듈 만들기
 
