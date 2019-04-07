@@ -108,7 +108,7 @@ analytics:
 author:
   name             : "Seokjin Hong"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "Software developer, [Java/Spring/SpringBoot/JSP/Thymeleaf], [JavaScript/Angular/Vue], [Native Android], [Docker]"
+  bio              : "Software developer, [Java/Spring/SpringBoot/JSP/Thymeleaf], [JavaScript/Angular/Vue], [Native Android], [Mysql/PostgreSql], [Docker]"
   location         : "Jeju-do, Korea"
   email            : companyhongsj@gmail.com
   links:
