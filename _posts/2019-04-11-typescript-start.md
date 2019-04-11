@@ -292,6 +292,7 @@ undefinedVar = [1,2,3];
 ```
 
 7. 유니온 타입(Union types)
+
 유니온 타입을 사용하면 한 변수가 여러 타입의 값을 가질 수 있다.
 ```ts
 let data: string | number;
@@ -300,6 +301,7 @@ data = "ten";
 ```
 
 8. 타입 추론(Type Inference)
+
 타입 스크립트는 변수 선언시 사용된 값에 따라 타입을 식별한다.
 ```ts
 let firstName = "John"; // string 타입이 추론되어 변수는 string으로 선언됨
