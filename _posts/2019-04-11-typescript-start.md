@@ -1,9 +1,3 @@
----
-title: "타입스크립트 시작하기"
-date: 2019-04-11 11:15:00 -0400
-categories: typescript javascript
----
-
 ## TypeScript 시작하기
 
 ### 자바스크립트 코드의 안좋은점?
@@ -213,11 +207,150 @@ console.log(hello);
 
 ### TypeScript의 타입
 
+1. 원시타입
+```ts
+// 숫자형
+let num: number = 42;
+let decimal = 42.0;
+```
 
+```ts
+// 문자열
+let firstName: string = 'John';
+let lastName: string = "stive";
+let templateHTML: string = `<h1>
+Title
+</h1>` 
+// ``: 템플릿 문자열을 사용하면 여러 줄에 걸쳐있는 문자열을 만들 수 있다.
+
+let news: string = "ESPN";
+let count: number = 10;
+let result: string = `Top ${count} news feed from ${news}.`
+console.log(result);
+```
+
+```ts
+// 논리형
+let hasvalues: boolean = false;
+```
+
+2. 배열
+```ts
+let scores:number[] = [10,20,30,40];
+console.log(scores[0]); // 10
+console.log(scores[1]); // 20
+console.log(scores[2]); // 30
+console.log(scores[3]); // 40
+```
+
+3. 튜플
+
+튜플은 배열과 비슷하지만 동일한 타입이 아닌 요소를 사용할 수 있다.
+```ts
+let details:[string, number, string, boolean];
+details=['John', 42, 'hong', true];
+console.log(details["0"]); // John
+console.log(details["1"]); // 42
+console.log(details["2"]); // hong
+console.log(details["3"]); // true
+```
+
+4. any
+
+any 키워드는 해당 변수에 대한 타입 검사를 거부한다.<br>
+이전 JavaScript 코드를 TypeScript로 마이그레이션할 때 매우 유용하다.
+```ts
+let anyVar: any;
+anyVar = 10;
+anyVar = 'aa';
+anyVar = [1,2,3];
+```
+
+5. void
+
+타입이 없는 경우를 나태내는데에 void 키워드를 사용한다.
+```ts
+function doSomething(num: number): void {
+    console.log(num);
+}
+```
+
+6. null과 undefined
+
+null과 undefined 타입은 모든 변수에도 지정할 수 있는 특수타입이다.<br>
+***null/undefined은 모든 타입의 하위 집합이므로 컴파일러는 null/undefined로 선언한 변수에 any를 할당한다.***
+```ts
+let nullVar = null;
+nullVar = 10;
+nullVar = 'aa';
+nullVar = [1,2,3];
+
+let undefinedVar = undefined;
+undefinedVar = 10;
+undefinedVar = 'aa';
+undefinedVar = [1,2,3];
+```
+
+7. 유니온 타입(Union types)
+유니온 타입을 사용하면 한 변수가 여러 타입의 값을 가질 수 있다.
+```ts
+let data: string | number;
+data = 10;
+data = "ten";
+```
+
+8. 타입 추론(Type Inference)
+타입 스크립트는 변수 선언시 사용된 값에 따라 타입을 식별한다.
+```ts
+let firstName = "John"; // string 타입이 추론되어 변수는 string으로 선언됨
+firstName = 10; // 타입 에러
+```
+
+```ts
+let lastName; // any 타입이 추론되어 변수는 any로 선언됨
+lastName = 10;
+lastName = 'aa';
+lastName = [1,2,3,];
+```
+
+```ts
+function doSomething(num: number) {
+    return "name"; // string 타입이 추론됨
+}
+```
+
+*열겨형(enum), 제네릭(generic), 교차타입(intersection type), 선택형 타입(optional type)은 다음에 알아본다.*
 
 ### TypeScript의 클래스
 
+#### 클래스와 접근 제어자(access modifier)
+```ts
+class News {
+    public channelNumber: number = 0;
+    public newstitle: string = '';
+    private author: string = "ESPN";
 
+    format(): string{
+        return `${this.channelNumber} : ${this.newstitle} was written by ${this.author}`;
+    }
+}
+```
+
+- public: public 키워드로 정의된 모든 프로퍼티는 클래스 외부에서 자유롭게 접근할 수 있다. 명시적으로 지정하지 않으면 TypeScript는 public을 기본 접근 제어자로 지정한다. 이는 기본 JavaScript 동작이 public으로 동작하기 때문이다.
+- private: private로 표시된 프로퍼티는 외부에서 접근할 수 없다. 클래스 내부에서만 유효하다.
+- protected: 클래스와 상속클래스 내부에서 접근 가능하다.
+
+#### readonly
+readonly 접근제어자가 있는 프로퍼티는 값이 할당된 후에 수정할 수 없다.
+```ts
+class HelloWorld {
+    readonly name: string = 'John';
+    
+    changeName() {
+        this.name = 'Jane'; // error
+    }
+}
+```
 
 
 
