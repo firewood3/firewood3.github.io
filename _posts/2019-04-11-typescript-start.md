@@ -1,4 +1,8 @@
-## TypeScript 시작하기
+---
+title: "TypeScript 시작하기"
+date: 2019-04-10 11:15:00 -0400
+categories: javascript typescript
+---
 
 ### 자바스크립트 코드의 안좋은점?
 ```js
