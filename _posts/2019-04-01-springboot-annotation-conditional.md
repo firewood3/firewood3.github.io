@@ -4,7 +4,7 @@ date: 2019-04-01 10:15:00 -0400
 categories: java spring annotation
 ---
 
-## 핵심
+## 개요
 
 **@Conditional 어노테이션은 구성 클래스를 스프링 컨테이너로 등록할지 말지 선택할 수 있도록 하는 어노테이션이다.**
 
