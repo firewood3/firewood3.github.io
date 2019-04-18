@@ -95,7 +95,7 @@ dataEmitter: EventEmitter<any>;
 **상위 컴포넌트의 HTML**
 ```html
 <하위컴포넌트의Directive
-    (하위 컴포넌트의 Emitter)="ParentFunction(event)"
+    (하위 컴포넌트의 Emitter(dataEmitter))="ParentFunction(event)"
     >
 </하위컴포넌트의Directive>
 ```
