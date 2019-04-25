@@ -1,6 +1,6 @@
 ---
 title: "Subject와 ConnectableObservable에서 이전에 생성된 데이터를 Observable에게 전달하기"
-date: 2019-04-25 13:51:00 -0400
+date: 2019-04-25 11:10:12 -0400
 categories: rxjs connectableObservable subject observable
 ---
 
