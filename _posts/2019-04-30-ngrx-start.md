@@ -10,7 +10,7 @@ categories: rxjs redux ngrx ngrx/store ngrx/effects anguler typescript javascrip
 4. [[외부 자료]](https://mherman.org/blog/authentication-in-angular-with-ngrx/)로그인 상태를 관리하기 위해 Ngrx 사용하기
 
 ***
-## Redux
+## Ngrx의 Redux 패턴
 [Redux pattern 참고](https://jobs.zalando.com/tech/blog/design-patterns-redux/?gh_src=4n3gxh1)
 
 ### Redux 패턴 = singleton pattern(immutable) + observer pattern(reactive)
