@@ -10,13 +10,8 @@ categories: rxjs redux ngrx ngrx/store ngrx/effects anguler typescript javascrip
 4. [[외부 자료]](https://mherman.org/blog/authentication-in-angular-with-ngrx/)로그인 상태를 관리하기 위해 Ngrx 사용하기
 
 ***
-## Ngrx로 상태 관리하기
+## Redux
 [Redux pattern 참고](https://jobs.zalando.com/tech/blog/design-patterns-redux/?gh_src=4n3gxh1)
-
-```code
-npm install @ngrx/store --save
-npm install @ngrx/effects --save
-```
 
 ### Redux 패턴 = singleton pattern(immutable) + observer pattern(reactive)
 ```code     
@@ -38,6 +33,12 @@ npm install @ngrx/effects --save
 
 ***
 ## Ngrx로 간단 상태 바꾸기
+
+```code
+npm install @ngrx/store --save
+npm install @ngrx/effects --save
+```
+
 Ngrx코드
 ```ts
 // ---- state 부분 ----
