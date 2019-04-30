@@ -15,11 +15,11 @@ categories: rxjs redux ngrx ngrx/store ngrx/effects anguler typescript javascrip
 
 ### Redux 패턴 = singleton pattern(immutable) + observer pattern(reactive)
 ```ts     
-        side effect(action chaining)           change state(Pure function)
-      [Action<enum>] -----> [Store<State>] <--> [Reducers(action): state]
-         ^                       |
-         | dispatch(action)      V      select():observable
-          ----------------- [Components]    
+   side effect(action chaining)           change state(Pure function)
+ [Action<enum>] -----> [Store<State>] <--> [Reducers(action): state]
+   ^                       |
+   | dispatch(action)      V select():observable
+    ------------------ [Components]    
 ```
 - Store는 옵저버 패턴의 Subject역할을 한다. state를 update하는 역할을 한다.
 - component는 옵저버 패턴의 Ovserver역할을 한다. 
