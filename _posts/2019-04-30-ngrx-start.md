@@ -14,7 +14,7 @@ categories: rxjs redux ngrx ngrx/store ngrx/effects anguler typescript javascrip
 [Redux pattern 참고](https://jobs.zalando.com/tech/blog/design-patterns-redux/?gh_src=4n3gxh1)
 
 ### Redux 패턴 = singleton pattern(immutable) + observer pattern(reactive)
-```code     
+```ts     
         side effect(action chaining)           change state(Pure function)
       [Action<enum>] -----> [Store<State>] <--> [Reducers(action): state]
          ^                       |
