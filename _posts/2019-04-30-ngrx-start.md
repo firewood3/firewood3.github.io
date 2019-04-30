@@ -39,9 +39,8 @@ npm install @ngrx/store --save
 npm install @ngrx/effects --save
 ```
 
-Ngrx코드
+### State
 ```ts
-// ---- state 부분 ----
 export interface RGBState {
   color: string;
   name: string | null;
@@ -53,8 +52,10 @@ export const initialRGBState: RGBState = {
   name: null,
   errorMessage: null
 };
+```
 
-// ---- action 부분 ---- 
+### Action
+```ts
 export enum RGBActionType {
   RED = '[RGB] RED',
   GREEN = '[RGB] GREEN',
@@ -94,8 +95,10 @@ export type All =
   | Blue
   | BlueSub1
   | BlueSub2;
+```
 
-// ---- reduct 부분 ----
+### Reducer
+```ts
 export function rgbReducer(state = initialRGBState, action: All): RGBState {
   switch (action.type) {
     case RGBActionType.RED: {
@@ -141,9 +144,10 @@ export const reducers = {
 };
 
 export const selectRgbState = createFeatureSelector<RGBState>('rgb');
+```
 
-
-// ---- effects 코드 ----
+### Effects
+```ts
 @Injectable()
 export class RgbStateEffects {
 
@@ -176,8 +180,10 @@ export class RgbStateEffects {
     tap(value=>console.log('blue_sub_1', value))
   );
 }
+```
 
-// ---- NgModule 등록 ----
+### NgModule 등록
+```ts
 @NgModule({
   imports:[
     StoreModule.forRoot(reducers, {}),
@@ -186,7 +192,7 @@ export class RgbStateEffects {
 }) 
 ```
 
-Ngrx state호출
+### Ngrx state 사용
 ```ts
 @Component({
   selector: 'app-rgb',
