@@ -142,3 +142,27 @@ Array.isArray([]); // true
 ```
 
 ## 3.5 JSON
+JSON은 자바스크립트 객체 표기법(JavaScript Object Notation)의 준말로, 데이터 전송형식의 일종이다. JSON은 프로퍼티명을 따옴표로 감싸야 한다는 점이 객체 리터럴과 유일한 문법적 차이다.
+
+JSON의 예
+```json
+{"name": "value", "some": [1, 2, 3]}
+```
+
+JSON 문자열을 객체로 변환할 때는 JSON.parse()를 사용하고, 객체를 JSON 문자열로 변환하기 위해서는 JSON.stringify() 메서드를 사용하면 된다.
+```js
+var jstr = `{"mykey": "my value"}`;
+// JSON to Object
+var data = JSON.parse(jstr);
+data // {mykey: "my value"}
+
+var dog = {
+    name: "Fido",
+    dob: new Date(),
+    legs: [1, 2, 3, 4]
+};
+// Object to JSON
+var jsonstr = JSON.stringify(dog);
+jsonstr // {"name":"Fido","dob":"2019-06-02T12:26:03.589Z","legs":[1,2,3,4]}
+```
+
