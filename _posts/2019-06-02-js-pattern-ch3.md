@@ -166,3 +166,46 @@ var jsonstr = JSON.stringify(dog);
 jsonstr // {"name":"Fido","dob":"2019-06-02T12:26:03.589Z","legs":[1,2,3,4]}
 ```
 
+## 3.6 정규 표현식 리터럴
+자바스크립트에서 정규식은 객체이며 new RegExp() 생성자를 사용하거나 정규식 리터럴을 사용하여 생성할 수 있다.
+
+다음 정규식은 역슬래시(\) 하나에 매치되는 정규식인데, 리터럴은 정규식의 역슬래시 문자 하나만을 이스케이프 해주면 되므로 역슬래시 문자가 두개 쓰인 반면, new RegEx() 생성자를 사용한 방식은 문자열의 역슬래시 자체를 이스케이프 해주어야 하기 때문에 역슬래시 문자가 네개 쓰였다.
+```js
+// 정규식 리터럴
+var re = /\\/gm;
+// 생성자
+var re = new RegExp("\\\\","gm");
+```
+
+정규식의 리터럴 표기법은 매칭에 사용되는 정규식 패턴을 슬래시로 감싸고 두번째 슬러시 뒤에는 패턴변경자를 쓴다.
+
+패턴 변경자
+- g: 전역 매칭
+- m: 여러줄 매칭
+- i: 대소문자 구분 없이 매칭
+
+패턴 변경자 g(전역 매칭)의 예제
+```js
+//한 개 이상의 문자열 뒤에 공백이 하나 있는 패턴
+var re = /\w+\s/;
+var str = "fee fi fo fum";
+var myArray = str.match(re);
+console.log(myArray); // ["fee "]
+
+//한 개 이상의 문자열 뒤에 공백이 하나 있는 패턴 : 글로벌 검색
+var re = /\w+\s/g;
+var str = "fee fi fo fum";
+var myArray = str.match(re);
+console.log(myArray); // ["fee ", "fi ", "fo "]
+```
+
+정규식 리터럴을 사용하면 정규식 객체를 인자로 받는 String.prototype.repalce()와 같은 메서드를 호출할 때 좀더 정확한 코드를 작성할 수 있다.
+```js
+var no_letter = "abc123XYZ".replace(/[a-z]/gi);
+no_letters // 123
+```
+
+그러나 매칭시킬 패턴을 미리 알 수 없고 런타임에 문자열로 만들어지는 경우네는 new RegExp()를 사용해야한다.
+
+>일반적인 경우에는 정규식 리터럴을 사용하고 매칭시킬 패턴의 문자열이 런타임에 만들어 지는 경우에는 new RegExp()를 사용하라.
+
