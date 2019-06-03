@@ -209,3 +209,48 @@ no_letters // 123
 
 >일반적인 경우에는 정규식 리터럴을 사용하고 매칭시킬 패턴의 문자열이 런타임에 만들어 지는 경우에는 new RegExp()를 사용하라.
 
+## 3.7 원시 데이터 타입 래퍼
+숫자, 문자열, 불린의 원시 데이터 타입에는 래퍼 객체가 있다.
+
+```js
+var n = 100;
+console.log(typeof n); // number
+
+var nobj = new Number(100);
+console.log(typeof nobj); // object
+```
+
+래퍼 객체에는 유용한 프로퍼티와 메서드가 있다.
+- 숫자 객체: toFixed(), toExponential()
+- 문자열: substring(), charAt(), toLowerCase(), length
+
+원시 데이터 타입에서도 래퍼 객체의 메서드를 사용할 수 있는데, 메서드를 호출하는 순간 내부적으로는 원시 데이터 타입 값이 객체로 임시 변환되어 객체처럼 동작한다.
+```js
+var s = "hello";
+console.log(s.toUpperCase()); // "HELLO"
+```
+
+원시 데이터 타입 값도 언제든 객체처럼 쓸 수 있기 때문에 장황한 래퍼 생성자를 쓸 필요는 사실 별로 없다.
+```js
+// 안티 패턴
+var s = new String("my string");
+var n = new Number(101);
+var b = new Boolean(true);
+
+// 권장안
+var s = "my string";
+var n = 101;
+var b = true;
+```
+
+단, 값을 확장하기 위해 래퍼 객체를 쓰는 경우가 있다. 원시 데이터 타입은 객체가 아니기 떄문에 프로퍼티를 추가하여 확장할 수 없다.
+
+```js
+var str = "simple";
+str.expand = "expand"; // 원시 타입을 확장할 경우 에러는 발생하지 않는다
+str.expand // undefined
+
+var str_wrapper = new String("simple");
+str_wrapper.expand = "expand";
+str_wrapper.expand // expand
+```
