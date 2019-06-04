@@ -303,14 +303,14 @@ catch(e) {
 ```
 
 ## 정리
-|내장 생성자(사용 자제)|리터럴과 원시 데이터 타입(권장안)|   |   |   |
+|내장 생성자(사용 자제)|리터럴과 원시 데이터 타입(권장안)|
 |---|---|---|---|---|
-|var o = new Object();   |var o = {};   |   |   |   |
-|var a = new Array();   |var a = [];   |   |   |   |
-|var re = new RegExp("[a-z]","g");   |var re = /[a-z]g/;   |   |   |   |
-|var s = new String()   |var s = "";   |   |   |   |
-|var n = new Number();   |var n = 0;   |   |   |   |
-|var b = new Boolean();   |var b = false;   |   |   |   |
-|throw new Error("un-oh");   |throw {name:"Error",message:"uh-oh"};<br> ... 또는 throw Error("uh-oh")   |   |   |   |
+|var o = new Object();   |var o = {};   |
+|var a = new Array();   |var a = [];   |
+|var re = new RegExp("[a-z]","g");   |var re = /[a-z]g/;   |
+|var s = new String()   |var s = "";   |
+|var n = new Number();   |var n = 0;   |
+|var b = new Boolean();   |var b = false;   |
+|throw new Error("un-oh");   |throw {name:"Error",message:"uh-oh"};<br> ... 또는 throw Error("uh-oh")   |
 
 
