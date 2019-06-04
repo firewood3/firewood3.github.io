@@ -313,4 +313,11 @@ catch(e) {
 |var b = new Boolean();   |var b = false;   |
 |throw new Error("un-oh");   |throw {name:"Error",message:"uh-oh"};<br> ... 또는 throw Error("uh-oh")   |
 
+---
+
+참고 도서  
+제목: 자바스크립트 코딩 기법과 핵심 패턴(JavaScript Patterns)  
+지은이: 스토얀 스테파노(stoyan stefanov) 지음  
+옮긴이: 김준기, 변유진 옮김  
+출판사: 인사이트  
 
