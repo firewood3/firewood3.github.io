@@ -304,7 +304,7 @@ catch(e) {
 
 ## 정리
 |내장 생성자(사용 자제)|리터럴과 원시 데이터 타입(권장안)|
-|---|---|---|---|---|
+|---|---|
 |var o = new Object();   |var o = {};   |
 |var a = new Array();   |var a = [];   |
 |var re = new RegExp("[a-z]","g");   |var re = /[a-z]g/;   |
