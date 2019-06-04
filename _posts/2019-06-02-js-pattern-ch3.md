@@ -254,3 +254,58 @@ var str_wrapper = new String("simple");
 str_wrapper.expand = "expand";
 str_wrapper.expand // expand
 ```
+
+## 3.8 에러 객체
+자바스크립트에는 Error(), SyntaxError(), TypeError() 등 여러가지 에러 생성자가 내장되어 있다.
+
+에러 생성자의 프로퍼티
+- name : 에러 객체의 이름=> 일반적으로 생성자 함수의 이름이 된다.
+- message: 객체를 생성할 때 생성자에 전달된 문자열
+
+```js
+function throwError() {
+  throw new Error("occur error!");
+}
+
+try {
+  throwError();
+}
+catch(e) {
+  console.log(e.name); // Error
+  console.log(e.message); // occur error!
+}
+```
+
+throw문은 에러 생성자를 사용하지 않고 직접 에러 객체를 만들어 사용할 수 있다.
+
+```js
+function throwError() {
+  throw {
+	name: "custom error",
+	message: "oops",
+	extra: "extra property"
+  }
+}
+
+try {
+  throwError();
+}
+catch(e) {
+  console.log(e.name); // custom error
+  console.log(e.message); // oops
+  console.log(e.extra); // extra property
+}
+```
+
+## 정리
+|내장 생성자(사용 자제)|리터럴과 원시 데이터 타입(권장안)|   |   |   |
+|---|---|---|---|---|
+|var o = new Object();   |var o = {};   |   |   |   |
+|var a = new Array();   |var a = [];   |   |   |   |
+|var re = new RegExp("[a-z]","g");   |var re = /[a-z]g/;   |   |   |   |
+|var s = new String()   |var s = "";   |   |   |   |
+|var n = new Number();   |var n = 0;   |   |   |   |
+|var b = new Boolean();   |var b = false;   |   |   |   |
+|throw new Error("un-oh");   |throw {name:"Error",message:"uh-oh"};<br> ... 또는 throw Error("uh-oh")   |   |   |   |
+
+
