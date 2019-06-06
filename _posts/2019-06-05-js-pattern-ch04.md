@@ -53,11 +53,84 @@ var add = function (a,b) {
 }
 ```
 
-
-
-
-
 ## 콜백 패턴
+### 콜백 함수
+[콜백함수](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function)는 다른 함수의 매개변수로 입력되는 함수이며, 외부 함수 내부에서 호출되어 일종의 루틴이나 액션을 완료한다.
+```js
+function greeting(name) {
+  alert('Hello ' + name);
+}
+
+function processUserInput(callback) {
+  var name = prompt('Please enter your name.');
+  callback(name);
+}
+
+processUserInput(greeting);
+```
+
+### 콜백과 유효범위
+콜백이 객체의 메서드일 때, 콜백안에서 콜백이 속해있는 객체를 참조하기 위해 this를 사용하기 위해서는 [call()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call)이나 [apply()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply) 함수를 사용해 콜백이 속해있는 객체를 바인드 해야 한다. (콜백이 일회성의 익명 함수나 전역 함수 인 경우는 문제가 되지 않는다.)
+
+콜백 안의 this가 콜백이 속해있는 객체를 참조한 것이 아니라 전역의 window를 참조한 경우
+```js
+var myapp = {};
+myapp.color = "green";
+myapp.paint = function (item) {
+    item.color = this.color;
+}
+
+var canvas = function (callback) {
+    var item = {};
+    callback(item);
+    console.log(item.color);
+}
+
+canvas(myapp.paint);
+
+// 콘솔출력
+// undefined
+```
+
+콜백 안의 this가 콜백이 속해있는 객체를 참조하기위해 call() 메소드를 사용하여 바인드 한 경우
+```js
+var myapp = {};
+myapp.color = "green";
+myapp.paint = function (item) {
+    item.color = this.color;
+}
+
+var canvas = function (callback, callback_obj) {
+    var item = {};
+    callback.call(callback_obj, item);
+    console.log(item.color);
+}
+
+canvas(myapp.paint, myapp);
+
+// 콘솔 출력
+// green
+```
+
+### 비동기 이벤트 리스너
+페이지의 엘리먼트에 이벤트 리스너를 붙이는 것은 실제로 이벤트가 발생했을 때 호출될 콜백 함수의 포인터를 전달하는 것이다.
+
+```js
+document.addEventListener("click", console.log, false);
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 함수 반환하기
 ## 자기 자신을 정의하는 함수
 ## 즉시 실행 함수
