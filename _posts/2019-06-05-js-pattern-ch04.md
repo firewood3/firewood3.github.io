@@ -410,12 +410,15 @@ bind를 사용한 add() 함수의 커링
 function add(x, y) {
     return x + y;
 }
-var add5 = add.bind(add, 5);
+var add5 = add.bind(null, 5);
 add5(4); // 9
 
-add.bind(add, 6)(7); // 13
+add.bind(null, 6)(7); // 13
 
-add.bind(add, 1, 2, 3)(5, 5); // 16
+function add(a, b, c, d, e) {
+    return a + b + c + d + e;
+}
+add.bind(null, 1, 2, 3)(5, 5); // 16
 ```
 
 ---  
