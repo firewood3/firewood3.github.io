@@ -284,6 +284,144 @@ var conf = {
 addPerson(conf);
 ```
 
-## 커리(Curry)
+## 함수 적용(Apply, Call)
+Apply, Call은 함수 내부에서 사용할 this를 지정하여 호출하는 메소드이다.
 
+>[function.apply(thisArg, [argsArray])](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)
+- 첫번째 매개변수: 함수내의 this와 바인딩할 객체(null이면 this는 전역객체를 가리킨다.)
+- 두번째 매개변수: 함수의 인자를 배열로 받음
+- 반환 값: 지정한 this 값과 인수들로 호출한 함수의 결과
+
+>[function.call(thisArg, arg1, arg2, ...)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call)
+- 첫번째 매개변수: 함수내의 this와 바인딩할 객체(null이면 this는 전역객체를 가리킨다.)
+- 두번째 매개변수: 함수의 인자를 가변인자로 받음
+- 반환 값: 지정한 this 값과 인수들로 호출한 함수의 결과
+
+```js
+var sayHi = function (who) {
+	return "Hello, " + who + "!";
+}
+sayHi('world'); // "Hello, world!"
+sayHi.apply(null, ["hello"]);
+sayHi.call(null, "hello");
+```
+
+```js
+function Product(name, price) {
+  this.name = name;
+  this.price = price;
+}
+
+function Food(name, price) {
+  Product.call(this, name, price);
+  this.category = 'food';
+}
+
+console.log(new Food('cheese', 5).name); // cheese
+```
+
+## 커링
+커링은 수학자 하스켈 커리(Haskell Curry)로 부터 유래되었다.
+커링은 함수를 변형하는 과정이다. 
+
+예를 들어, 아래와 같은 함수를 
+```js
+function add(x, y) {
+    return x + y;
+}
+```
+
+하나의 인자를 대체하고,
+```js
+function add(5, y) {
+    return 5 + y;
+}
+```
+
+나머지 하나의 인자를 대체하도록 변형하는 것이다.
+```js
+function add(5, 4) {
+    return 5 + 4;
+}
+```
+
+add()함수를 위와 같이 작동하도록 커링함수로 만들 수 있다.
+```js
+// 커링된 add
+function add(x, y) {
+    var oldx = x, oldy = y;
+    if (typeof oldy === "undefined") { // 부분적인 적용
+        return function (newy) {
+            return oldx + newy;
+        };
+    }
+    // 전체 인자 적용
+    return x + y;
+}
+
+typeof add(5) // function
+add(5)(4) //9
+```
+
+범용 커링 함수(함수명은 이 변형 방법의 발명가인 모세 쉐핀켈의 이름에서 가져왔다.)
+```js
+function schofinkelize(fn) {
+    var slice = Array.prototype.slice,
+		stored_args = slice.call(arguments, 1);
+	return function () {
+        var new_args = slice.call(arguments),
+			args = stored_args.concat(new_args);
+		return fn.apply(null, args);
+    };
+}
+```
+
+범용 커링 함수 사용
+```js
+function add(x, y) {
+    return x + y;
+}
+
+var newadd = schofinkelize(add, 5);
+newadd(4); // 9
+
+schofinkelize(add, 6)(7) //13
+
+function add(a, b, c, d, e) {
+    return a + b + c + d + e;
+}
+
+schofinkelize(add, 1, 2, 3)(5, 5) // 16
+```
+
+어떤 함수를 호출할 때 대부분의 매개변수가 항상 비슷하다면, 커링을 적용해볼만 하다.
+
+## bind
+bind함수를 사용하여 curring을 구현할 수 있다. [참고 curring vs partial application](https://codeburst.io/javascript-currying-vs-partial-application-4db5b2442be8)
+
+bind함수는 함수 내부에서 this로 사용할 값과 매개변수들을 전달받아 새로운 함수를 반환하는 메소드이다.
+>[func.bind(thisArg[, arg1[, arg2[, ...]]])](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Function/bind)
+- 첫번째 매개변수 : 바인딩 함수가 this로 사용할 값. 바인딩 함수를 new 연산자로 생성한 경우 무시 된다.
+- 두번째 매개변수 : 바인딩한 함수가 원본 함수에 차례대로 제공할 매개변수
+- 반환값: 지정한 this 값 및 초기 인수를 제공한, 주어진 함수의 복제본.
+
+bind를 사용한 add() 함수의 커링
+```js
+function add(x, y) {
+    return x + y;
+}
+var add5 = add.bind(add, 5);
+add5(4); // 9
+
+add.bind(add, 6)(7); // 13
+
+add.bind(add, 1, 2, 3)(5, 5); // 16
+```
+
+---  
+참고 도서  
+제목: 자바스크립트 코딩 기법과 핵심 패턴(JavaScript Patterns)  
+지은이: 스토얀 스테파노(stoyan stefanov) 지음  
+옮긴이: 김준기, 변유진 옮김  
+출판사: 인사이트  
 
