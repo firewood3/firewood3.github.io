@@ -166,35 +166,124 @@ exFunction(); // boo
 
 특징
 - 페이지 로드가 완료된 후, 초기 설정작업을 해야할때 유용하다.
-- 모든 코드를 지역 유효범위로 감싼다. (만약 즉시 실행 함수가 아니라면 함수 내부의 변수는 전역변수가 된다.)
+- 모든 코드를 지역 유효범위로 감싼다.
+- 단 한 번의 초기화 작업을 실행하는 동안 전역 네임스페이스를 보호할 수 있다.
+- 즉시 실행 함수 내에서 window를 사용하지 않고도 전역 객체에 접근할 수 있다.
 
 ```js
+window.msg = "hello";
 (function () {
-    var msg = "watch out!"; // 지역 유효범위
-    alert(msg);
+    var who = "world!";
+    console.log(msg + who);
 }()); // 권장되는 닫는 괄호의 위치
 
 (function() {
-    alert('watch out!');
+    var who = "world!";
+    console.log(msg + who);
 })();
 ```
 
+## 즉시 객체 초기화
+객체가 생성된 즉시 init() 메서드를 실행해 객체를 사용하는 패턴
+- 장점: 단 한 번의 초기화 작업을 실행하는 동안 전역 네임스페이스를 보호할 수 있다.
+- 단점: 자바스크립트 압축도구가 즉시 실행 함수 패턴에 비해 효과적으로 압축하지 못할 수도 있다.
 ```js
-function myapp() {
-    name = "hong"; // 전역 유효범위
+// 여기서의 중괄호 ()는 코드 블록이 아니라 객체 리터럴로 인식하도록 지시하는 역할을 한다.
+({
+    maxwidth: 600,
+    maxheight: 400,
+
+    gimmeMax: function () {
+        return this.maxwidth + "x" + this.maxheight;
+    },
+
+    // 초기화
+    init: function () {
+        console.log(this.gimmeMax());
+    }
+}).init();
+```
+
+## 함수 프로퍼티 - 메모제이션(Memoization) 패턴
+함수의 프로퍼티에 결과(반환 값)를 저장하고 이 프로퍼티를 사용하는 패턴을 메모제이션 패턴이라고 한다.
+- 사용법: 함수에 cache 프로퍼티를 생성하고 cache 프로퍼티는 함수로 전달된 param 매개변수를키로 사용하고 계산의 결과를 값으로 가지는 객체(해시)를 만들어 사용한다.
+- 장점: 복잡한 연산이 반복적으로 게속될 경우 성능을 최적화 시킬 수 있다.
+
+### 매개변수가 원시데이터 타입일 경우
+```js
+var myFunc = function (param) {
+	if (!myFunc.cache) {
+    	myFunc.cache = [];
+	}
+    if ( !myFunc.cache[param]) {
+		console.log("create");
+        var result = param;
+        myFunc.cache[param] = result;
+    }
+    return myFunc.cache[param];
 }
 
-myapp();
-window.name // hong
+console.log(myFunc("hello")); // create, hello
+console.log(myFunc("hello")); // hello
+console.log(myFunc("hello")); // hello
+
+console.log(myFunc("hi")); // create, hi
+console.log(myFunc("hi")); // hi
+console.log(myFunc("hi")); // hi
+```
+
+### 매개변수가 객체일 경우
+```js
+var myFunc = function (param) {
+    if (!myFunc.cache) {
+    	myFunc.cache = [];
+	}
+
+    var index = JSON.stringify(param); // 직렬화
+
+    if ( !myFunc.cache[index]) {
+        var result = {result: param};
+        myFunc.cache[index] = result;
+    }
+    return myFunc.cache[index];
+}
 ```
 
 
-
-
-## 즉시 객체 초기화
-## 초기화 시점의 분리
-## 함수 프로퍼티 - 메모제이션(Memoization) 패턴
 ## 설정 객체 패턴
+설정 객체 패턴은 좀더 깨끗한 API를 제공하는 방법이다.
+
+설정 객체의 장점
+- 매개변수와 순서를 기억할 필요가 없다.
+- 선택적인 매개변수를 안전하게 생략할 수 있다.
+- 읽기 쉽고 유지보수 하기 편하다.
+- 매개변수를 추가하거나 제거하기 편하다.
+
+설정 객체의 단점
+- 매개변수의 이름을 기억해야 한다.
+- 프로퍼티 이름은 압축되지 않는다.
+
+
+### 이름, 성, 주소, 날짜를 전달받아 목록에 사람을 추가하는 함수
+```js
+function addPerson(first, last, address, date) {...}
+
+addPerson("Bruce", "Wayne", null, new Date());
+```
+
+### 설정객체를 전달받아 목록에 사람을 추가하는 함수
+```js
+function addPerson(conf) {...}
+
+var conf = {
+    firstname: "Bruce",
+    lastname: "Wayne",
+    date: new Date()
+}
+
+addPerson(conf);
+```
+
 ## 커리(Curry)
-## 요약
+
 
