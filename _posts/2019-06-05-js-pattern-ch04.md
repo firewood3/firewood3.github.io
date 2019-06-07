@@ -119,20 +119,48 @@ canvas(myapp.paint, myapp);
 document.addEventListener("click", console.log, false);
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
 ## 함수 반환하기
+함수는 객체이기 때문에 반환 값으로 사용될 수 있다.
+
+함수 반환 예제: private 데이터 저장을 위해 [클로저](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures)를 사용
+```js
+var setup = function () {
+    var count = 0; // private 변수
+    return function () {
+        return (count += 1);
+    };
+};
+
+// next() 함수에서는 setup() 함수의 count에 접근 불가.
+var next = setup();
+next(); // 1
+next(); // 2
+next(); // 3
+```
+
 ## 자기 자신을 정의하는 함수
+함수의 본문 내에서 이전의 함수 포인터가 새로운 함수를 가리키도록 하므로써 자기자신을 정의하는 함수를 만들 수 있다.
+
+- 장점: 어떤  초기화 준비 작업을 단 한번만 수행할 경우에 유용하다.
+- 단점: 자기 자신을 재정의한 이후에는 이전에 원본 함수에 추가했던 프로퍼티들을 모두 찾을 수 없다.
+
+```js
+var exFunction = function () {
+    console.log("foo");
+    exFunction = function () {
+        console.log("boo");
+    }
+}
+
+exFunction.property = "property";
+
+exFunction.property // property
+exFunction(); // foo
+exFunction.property; // undefined
+exFunction(); // boo
+exFunction(); // boo
+```
+
 ## 즉시 실행 함수
 ## 즉시 객체 초기화
 ## 초기화 시점의 분리
