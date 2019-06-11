@@ -7,7 +7,7 @@ categories: javascript design-pattern pattern
 ## 네임스페이스 패턴
 네임스페이스는 전역 객체를 하나 만들고 모든 기능을 이 객체에 추가한다. 주의해야 할 점은 추가하려는 프로퍼티가 이미 존재할 수도 있기 때문에, 추가하려는 프로퍼티가 존재하는지 여부를 검사하는 해야한다.
 
-네임스페이스를 적용하지 않은 코드
+### 네임스페이스를 적용하지 않은 코드
 ```js
 function Parent() {};
 function Child() {};
@@ -19,20 +19,48 @@ module1.data = {a: 1, b: 2};
 var module2 = {};
 ```
 
-네임스페이스를 적용한 코드
+### 네임스페이스를 적용한 코드
 ```js
+
+// 기존의 MYAPP 이 존재하는지 검사
 var MYAPP = MYAPP || {};
 
-MYAPP.some_var = 1;
+// 새롭게 생성되는 프로퍼티가 이미 존재하는 프로퍼티를 덮어 쓰지 않도록 하는 namespace 메소드
+MYAPP.namespace = function (ns_string) {
+    var parts = ns_string.split('.'),
+        parent = MYAPP,
+        i;
+    
+    // 처음에 중복되는 전역 객체명은 제거한다.
+    if (parts[0] === "MYAPP") {
+        parts = parts.slice(1);
+    }
 
+    for (i = 0; i < parts.length; i += 1) {
+        // 프로퍼티가 존재하지 않으면 생성한다.
+        if (typeof parent[parts[i]] === "undefined") {
+            parent[parts[i]] = {};
+        }
+
+        parent = parent[parts[i]];
+    }
+    return parent;
+}
+
+MYAPP.namespace('Parent');
 MYAPP.Parent = function () {};
+
+MYAPP.namespace('Child');
 MYAPP.Child = function () {};
 
-MYAPP.modules = {};
+MYAPP.namespace('some_var');
+MYAPP.some_var = 1;
 
-MYAPP.modules.module1 = {};
+MYAPP.namespace('modules.module1.data');
 MYAPP.modules.module1.data = {a: 1, b: 2};
-MYAPP.modules.moudle2 = {};
+
+MYAPP.namespace('modules.module2');
+MYAPP.module2 = {};
 ```
 
 ## 의존 관계 선언
