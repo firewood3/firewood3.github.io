@@ -203,5 +203,3 @@ gadget2.setBrowser('Chrome');
 console.log(gadget1.getBrowser()); // Chrome
 console.log(gadget2.getBrowser()); // Chrome
 ```
-
-## 모듈 패턴
