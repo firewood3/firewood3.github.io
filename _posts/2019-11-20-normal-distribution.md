@@ -1,3 +1,9 @@
+---
+title: "타입스크립트 정규분포 정규화"
+date: 2019-11-20 10:00:00 -0400
+categories: javascript normal-distribution typescript 정규분포 정규화
+---
+
 # 타입스크립트 정규분포 정규화
 
 ## 1. 표준편차 구하기
