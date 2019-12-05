@@ -1,7 +1,7 @@
 ---
 title: "nodejs, process.env를 사용하여 로컬 환경변수 및 도커 환경변수 읽어오기"
 date: 2019-12-05 09:11:12 -0400
-categories: javascript nodejs process.env environment
+categories: javascript nodejs process.env environment docker
 ---
 
 환경 변수 설정은 데이터 베이스 접속 정보나 api키 값을 설정할 때 유용하게 사용됨<br>
