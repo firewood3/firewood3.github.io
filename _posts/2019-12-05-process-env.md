@@ -163,7 +163,7 @@ CMD ["node","server.js"]
 ### 3.2 실행
 - docker build -t server:v1 .
 - docker run -p 3000:3000 -d server:v1
-- 환경변수 변경 가능: docker run -e DB_NAME='changed_name' -e DB_HOST='changed_host' -p 3000:3000 -d server:v1음
+- 환경변수 변경 가능: docker run -e DB_NAME='changed_name' -e DB_HOST='changed_host' -p 3000:3000 -d server:v1
 
 ### 3.3 결과
 - input: http://localhost:3000
